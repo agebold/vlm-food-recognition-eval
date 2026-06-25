@@ -49,7 +49,14 @@ PROMPT = (
 )
 
 
-def call_ollama(image_path: Path, model: str, timeout: int = 60) -> str:
+def call_ollama(image_path: Path, model: str, timeout: int = 45) -> str:
+    """Call Ollama with a hard wall-clock deadline using streaming mode.
+
+    stream=False buffers the entire response inside Ollama before sending,
+    so requests' read timeout never fires during long think sequences.
+    stream=True sends tokens as they're generated — we can enforce a real
+    deadline by closing the connection after `timeout` seconds.
+    """
     image_b64 = base64.b64encode(image_path.read_bytes()).decode()
     payload = {
         "model": model,
@@ -60,12 +67,41 @@ def call_ollama(image_path: Path, model: str, timeout: int = 60) -> str:
                 "images": [image_b64],
             }
         ],
-        "stream": False,
-        "options": {"temperature": 0.1},  # low temp for consistent ingredient lists
+        "stream": True,
+        "think": False,
+        "options": {
+            "temperature": 0.1,
+            "num_predict": 256,
+        },
     }
-    resp = requests.post(OLLAMA_URL, json=payload, timeout=timeout)
-    resp.raise_for_status()
-    return resp.json()["message"]["content"]
+
+    deadline = time.time() + timeout
+    content_parts: list[str] = []
+    in_think_block = False
+
+    with requests.post(OLLAMA_URL, json=payload, stream=True, timeout=(10, 180)) as resp:
+        resp.raise_for_status()
+        for line in resp.iter_lines():
+            if time.time() > deadline:
+                raise TimeoutError(f"Ollama response exceeded {timeout}s wall-clock limit")
+            if not line:
+                continue
+            chunk = json.loads(line)
+            token = chunk.get("message", {}).get("content", "")
+
+            # Strip <think>...</think> blocks emitted despite think=False
+            if "<think>" in token:
+                in_think_block = True
+            if in_think_block:
+                if "</think>" in token:
+                    in_think_block = False
+                continue
+
+            content_parts.append(token)
+            if chunk.get("done"):
+                break
+
+    return "".join(content_parts)
 
 
 def parse_ingredients(raw: str) -> list[str]:
@@ -105,6 +141,7 @@ def run(
     limit: int | None,
     out_path: str,
     delay: float,
+    id_file: str | None = None,
 ) -> None:
     data_dir = Path(data_dir)
 
@@ -112,7 +149,11 @@ def run(
     dishes = load_dishes(data_dir)
     split = "test"
     split_prefix = "depth" if overhead else "rgb"
-    test_ids = load_split_ids(data_dir, split=split, prefix=split_prefix)
+    if id_file:
+        test_ids = Path(id_file).read_text().splitlines()
+        test_ids = [i.strip() for i in test_ids if i.strip()]
+    else:
+        test_ids = load_split_ids(data_dir, split=split, prefix=split_prefix)
     if limit:
         test_ids = test_ids[:limit]
 
@@ -218,6 +259,8 @@ def main() -> None:
                         help="Seconds to wait between API calls (for rate limiting)")
     parser.add_argument("--overhead", action="store_true",
                         help="Use overhead rgb.png images (depth split, 507 dishes) instead of side H.264 videos")
+    parser.add_argument("--id-file", default=None,
+                        help="Path to a text file with dish IDs to evaluate (one per line); overrides split file")
     args = parser.parse_args()
 
     # Sanity-check Ollama is running
@@ -237,6 +280,7 @@ def main() -> None:
         limit=args.limit,
         out_path=args.out,
         delay=args.delay,
+        id_file=args.id_file,
     )
 
 

@@ -1,20 +1,120 @@
-# VLM Food Recognition Evaluation
+# VLM Food Recognition Evaluation on Nutrition5k
 
-Reproducible evaluation harness for photo-based food ingredient recognition using vision-language models (VLMs), benchmarked against the [Nutrition5k](https://github.com/google-research-datasets/Nutrition5k) dataset.
-
-## What This Is
-
-We replicate and extend the evaluation protocol from [PMC13092701](https://pmc.ncbi.nlm.nih.gov/articles/PMC13092701/) — a peer-reviewed April 2026 study that tested 16 VLMs (including Llama 3.2-90B-Vision and Gemini 2.5 Flash) on ingredient-level food recognition. The study reported Llama 3.2-90B-Vision achieving **0.6626–0.6967 precision** on Nutrition5k.
-
-Our first result: **gemma4 (8B, local, Q4_K_M quantized) hits 0.69 precision** on the same dataset in a 5-dish sanity run — matching a 90B cloud model from a local machine.
+Reproducible evaluation harness for photo-based food ingredient recognition using vision-language models (VLMs), benchmarked against the [Nutrition5k](https://github.com/google-research-datasets/Nutrition5k) dataset using the custom metric from [PMC13092701](https://pmc.ncbi.nlm.nih.gov/articles/PMC13092701/).
 
 ---
 
-## Key Finding from Our Research
+## Results
 
-> The PMC13092701 precision figures are **not inherited baselines** from Nutrition5k. The original dataset paper has no precision/recall/F1 at all — it only measures calorie/mass/macro MAE. PMC13092701 invented a custom **LCS + synonym-list similarity function** (Equations 1–6) to produce those numbers.
+Full 507-dish evaluation on the Nutrition5k overhead test split. All models use the same prompt, same test images, same metric.
 
-This harness implements that exact metric, making our results directly comparable to the paper.
+### Prediction Accuracy (honest metric)
+
+**Prediction accuracy** = fraction of named ingredients that were actually in the dish. This is the only fair metric when you cannot see invisible ingredients (olive oil, salt, pepper) in a photo.
+
+| Model | Provider | F1 | Precision | Pred Accuracy | Correct/Dish | Avg Predictions | Zero-Correct | All-Correct |
+|---|---|---|---|---|---|---|---|---|
+| **Claude Opus 4.8** | Anthropic API | **0.677** | 0.714 | 82.7% | 3.30 | 4.1 | 4.7% | 37.1% |
+| Llama4 Scout 17B | AWS Bedrock | 0.655 | 0.711 | 83.8% | 2.71 | 3.2 | 5.1% | 37.7% |
+| Llama4 Maverick 17B | AWS Bedrock | 0.646 | 0.703 | **84.2%** | 2.61 | 3.1 | 5.3% | 39.5% |
+| Nova Lite | AWS Bedrock | 0.649 | 0.712 | 82.5% | 2.57 | 3.1 | 6.7% | **39.9%** |
+| Nova Pro | AWS Bedrock | 0.644 | 0.700 | 81.0% | 2.66 | 3.3 | 7.1% | 37.1% |
+
+### What these numbers actually mean
+
+**Claude's F1 lead is an artifact of verbosity, not accuracy.** Claude names 4.1 ingredients per dish; Maverick names 3.1. Claude gets more right in absolute terms (3.3 vs 2.6) but its *rate* of being correct (82.7%) is lower than Maverick's (84.2%). When you ask "for each thing the model named, was it actually there?" — Maverick wins.
+
+The F1 metric rewards predicting more things (higher recall numerator) even when those things aren't visible in the photo. This inflates Claude's score but doesn't reflect real-world usefulness.
+
+**Cost comparison (per 507 dishes):**
+- Claude Opus 4.8 (vision): ~$0.80–1.20
+- Llama4 Maverick (Bedrock): ~$0.02–0.05
+- Nova Lite (Bedrock): ~$0.003–0.005
+
+At 10–40x cheaper with *higher* prediction accuracy, Maverick and Nova Lite are the practical choices for this task.
+
+---
+
+## Why "Recall" Is a Misleading Metric Here
+
+The PMC13092701 paper reports recall, and we implement it faithfully — but treating it as a real performance signal is wrong.
+
+Nutrition5k's ground truth includes ingredients that are **physically invisible in overhead photos**:
+
+| Category | Top examples | Why a model can't see them |
+|---|---|---|
+| Oils / fats | olive oil, butter | Absorbed into food, no visual presence |
+| Dissolved seasonings | salt, pepper | Dissolved or tiny specks below image resolution |
+| Aromatics cooked in | garlic, shallots, onions | Minced/diced and hidden inside other foods |
+| Acid/liquid components | vinegar, lemon juice | Clear liquids poured on and invisible |
+
+The top missed ingredients across all 5 models confirm this — the leaderboard of "misses" is dominated by invisible ingredients:
+
+| Ingredient | Times missed (across 5 models × 507 dishes) |
+|---|---|
+| olive oil | 877 |
+| salt | 595 |
+| pepper | 363 |
+| garlic | 344 |
+| mustard | 312 |
+| vinegar | 277 |
+| lemon juice | 206 |
+
+A model that correctly answers "I see chicken, rice, broccoli, and cherry tomatoes" will get low recall because GT also includes olive oil, salt, and garlic that are invisible. Recall punishes perfect visual predictions for not hallucinating invisible ingredients. **Don't use recall as a standalone metric on this dataset.**
+
+---
+
+## Analysis Plots
+
+All plots are in [eval/plots/](eval/plots/).
+
+### Plot 1 — Prediction accuracy per model
+![Prediction accuracy](eval/plots/01_prediction_accuracy.png)
+
+When a model names an ingredient, how often is it actually in the dish? Maverick leads at 84.2%.
+
+### Plot 2 — Correct ingredients per dish (distribution)
+![Correct per dish](eval/plots/02_correct_per_dish_dist.png)
+
+Distribution of correct ingredient counts per dish for each model. Claude's higher median reflects more predictions, not higher accuracy.
+
+### Plot 3 — Top missed ingredients across all models
+![Missed ingredients](eval/plots/03_missed_ingredients.png)
+
+The top missed ingredients are dominated by invisible or hard-to-see items. These are a fundamental benchmark limitation — no VLM can see dissolved salt or absorbed olive oil.
+
+### Plot 4 — Hallucinated ingredients per model
+![Hallucinated](eval/plots/04_hallucinated.png)
+
+Ingredients each model predicted that weren't in ground truth. Common patterns: generic terms ("seasoning", "sauce") and confident wrong identifications.
+
+### Plot 5 — F1 by dish complexity
+![F1 by complexity](eval/plots/05_f1_by_complexity.png)
+
+All models degrade sharply on complex dishes (9+ GT ingredients). Simple dishes (1–3 GT ingredients) get high F1 because naming one or two visible items matches most of GT.
+
+### Plot 6 — Per-dish prediction accuracy histogram
+![Pred accuracy hist](eval/plots/06_pred_accuracy_hist.png)
+
+Distribution of per-dish prediction accuracy (correct/predicted) across all 507 dishes. Most dishes cluster above 80%, but there's a long tail of difficult cases near 0%.
+
+---
+
+## Dataset: Nutrition5k
+
+- **5,006 plates** of real cafeteria food with per-ingredient mass, calorie, fat, carb, protein annotations
+- **507 overhead RGB test images** from the `depth_test_ids.txt` split — pre-extracted PNGs, no video decoding needed
+- **Average GT ingredients per dish:** 7.1 — but many are invisible condiments and seasonings
+- **Download:** public GCS bucket, no authentication required
+
+```bash
+# Download overhead test images (~194 MB)
+mkdir -p eval/data/nutrition5k/imagery/realsense_overhead
+while IFS= read -r dish_id; do
+  gsutil cp "gs://nutrition5k_dataset/nutrition5k_dataset/imagery/realsense_overhead/$dish_id/rgb.png" \
+            "eval/data/nutrition5k/imagery/realsense_overhead/$dish_id.png"
+done < eval/data/nutrition5k/dish_ids/splits/depth_test_ids.txt
+```
 
 ---
 
@@ -23,156 +123,26 @@ This harness implements that exact metric, making our results directly comparabl
 Ingredient matching is **soft** — partial name matches contribute fractionally via normalized LCS, and known synonyms match perfectly.
 
 ```
-Sim(a, b)    = max( StrMatch(a, b),  SemMatch(a, b) )
+Sim(a, b)     = max( StrMatch(a, b),  SemMatch(a, b) )
+StrMatch(a,b) = 2 × |LCS(a,b)| / (|a| + |b|)           # Eq 5 — normalized LCS
+SemMatch(a,b) = 1.0 if b ∈ Var(a) or a ∈ Var(b) else 0 # Eq 6 — synonym lookup
 
-StrMatch(a,b) = 2 × |LCS(a,b)| / (|a| + |b|)          # Eq 5 — normalized LCS
-SemMatch(a,b) = 1.0 if b ∈ Var(a) or a ∈ Var(b)        # Eq 6 — synonym lookup
-               else 0.0
-
-Precision    = Σ p∈P  max t∈T  Sim(p,t)  /  |P|        # Eq 1
-Recall       = Σ t∈T  max p∈P  Sim(t,p)  /  |T|        # Eq 2
-F1           = 2 × P × R / (P + R)                      # Eq 3
+Precision     = Σ p∈P  max t∈T  Sim(p,t)  /  |P|        # Eq 1
+Recall        = Σ t∈T  max p∈P  Sim(t,p)  /  |T|        # Eq 2
+F1            = 2 × P × R / (P + R)                      # Eq 3
 ```
 
-Where `P` = predicted ingredient list (from VLM), `T` = ground-truth ingredient list (from Nutrition5k CSV).
+Where `P` = predicted ingredient list (from VLM), `T` = ground-truth ingredient list.
 
----
+**Implementation:** [eval/metric.py](eval/metric.py) — macro-averaged across dishes.
 
-## Dataset: Nutrition5k
-
-- **5,006 plates** of real cafeteria food with per-ingredient mass, calorie, fat, carb, protein annotations
-- **Source:** USDA Food and Nutrient Database
-- **Splits:** 90% train (~4,505) / 10% test
-  - `rgb_test_ids.txt` — 709 dishes (side-angle H.264 videos, cameras A–D)
-  - `depth_test_ids.txt` — 507 dishes (overhead RGB-D PNG images) ← **what this harness uses**
-- **Download:** public GCS bucket, no auth required
-
-```bash
-gsutil ls gs://nutrition5k_dataset/
-```
-
-We use the **overhead RGB split** (`depth_test_ids.txt`, 507 dishes) because images are pre-extracted PNGs — no video decoding needed. The side-angle split stores raw H.264 video requiring ffmpeg frame extraction.
-
----
-
-## Project Structure
-
-```
-eval/
-├── download_dataset.sh       # pull splits + metadata (~10MB) or test images
-├── synonyms.py               # 100+ food synonym groups → bidirectional lookup
-├── metric.py                 # PMC13092701 Eq 1-6 (LCS + synonym P/R/F1)
-├── parse_nutrition5k.py      # load ground-truth CSVs, locate image files
-├── run_eval.py               # main runner → Ollama / any OpenAI-compat API → score → JSON
-├── requirements.txt
-└── results/                  # output JSONs (gitignored — too large)
-```
-
----
-
-## Setup
-
-```bash
-# 1. Install dependencies (just requests + tqdm)
-pip install -r eval/requirements.txt
-
-# 2. Download splits + metadata (~10MB, fast)
-cd eval && bash download_dataset.sh
-
-# 3. Download overhead test images (507 dishes, ~194MB)
-bash download_dataset.sh --images
-# or manually:
-mkdir -p data/nutrition5k/imagery/realsense_overhead
-while IFS= read -r dish_id; do
-  gsutil cp "gs://nutrition5k_dataset/nutrition5k_dataset/imagery/realsense_overhead/$dish_id/rgb.png" \
-            "data/nutrition5k/imagery/realsense_overhead/$dish_id.png"
-done < data/nutrition5k/dish_ids/splits/depth_test_ids.txt
-
-# 4. Make sure Ollama is running with a vision model
-ollama pull gemma4
-ollama serve
-```
-
----
-
-## Running the Eval
-
-```bash
-cd eval
-
-# Quick sanity check — 5 dishes
-python3 run_eval.py --overhead --limit 5 --out results/sanity.json
-
-# Full 507-dish eval with gemma4
-python3 run_eval.py --overhead --model gemma4:latest --out results/gemma4_full.json
-
-# Side-angle cameras (requires H.264 → frame extraction, see notes)
-python3 run_eval.py --cameras A B C D --model gemma4:latest --out results/gemma4_side.json
-```
-
-### Options
-
-| Flag | Default | Description |
-|---|---|---|
-| `--model` | `gemma4:latest` | Ollama model name |
-| `--overhead` | false | Use overhead PNGs (depth split, 507 dishes) |
-| `--cameras` | `A` | Side cameras to evaluate (A B C D) |
-| `--frame-index` | `10` | Frame index in H.264 video (PMC13092701 uses 10) |
-| `--limit` | None | Cap at N dishes for quick testing |
-| `--out` | `results/eval_results.json` | Output path |
-| `--data-dir` | `./data/nutrition5k` | Nutrition5k root |
-
----
-
-## Early Results
-
-> Full 507-dish run in progress. These are from the 5-dish sanity run.
-
-| Model | Params | Precision | Recall | F1 | Mode |
-|---|---|---|---|---|---|
-| **gemma4** (local, Q4_K_M) | 8B | **0.6915** | 0.6027 | 0.6367 | overhead |
-| Llama 3.2-90B-Vision¹ | 90B | 0.6626–0.6967 | — | — | side cameras A–D |
-
-¹ From PMC13092701 (April 2026, peer-reviewed). Evaluated on side-angle cameras using their custom LCS+synonym metric. Direct comparison requires replicating exact prompt and camera perspective.
-
-**Initial observation:** An 8B local model quantized to Q4_K_M appears competitive with a 90B cloud model on this task. This may reflect the task's sensitivity to prompt design more than raw model scale.
-
----
-
-## Output JSON Schema
-
-```json
-{
-  "model": "gemma4:latest",
-  "mode": "overhead",
-  "n_dishes": 507,
-  "n_samples": 507,
-  "n_skipped": 0,
-  "aggregate": {
-    "precision": 0.xx,
-    "recall": 0.xx,
-    "f1": 0.xx,
-    "n": 507
-  },
-  "per_camera": {
-    "overhead": { "precision": 0.xx, "recall": 0.xx, "f1": 0.xx, "n": 507 }
-  },
-  "samples": [
-    {
-      "dish_id": "dish_1565035746",
-      "camera": "overhead",
-      "predicted": ["chicken", "rice", "broccoli"],
-      "ground_truth": ["chicken breast", "white rice", "broccoli florets"],
-      "scores": { "precision": 0.92, "recall": 0.88, "f1": 0.90 },
-      "raw_response": "..."
-    }
-  ]
-}
-```
+**Synonym coverage:** [eval/synonyms.py](eval/synonyms.py) — 100+ bidirectional equivalences (e.g. "capsicum" ↔ "bell pepper", "courgette" ↔ "zucchini"). The paper's synonym list is not published; ours covers common equivalences but may undercount some matches.
 
 ---
 
 ## Prompt Used
+
+All models receive the same prompt at temperature 0.1:
 
 ```
 You are a food recognition assistant.
@@ -181,23 +151,96 @@ Return ONLY a JSON array of ingredient name strings — no quantities, no units,
 Example: ["chicken", "rice", "broccoli", "carrots"]
 ```
 
-Low temperature (0.1) for consistent outputs.
+---
+
+## Project Structure
+
+```
+eval/
+├── metric.py                # PMC13092701 Eq 1-6 (LCS + synonym P/R/F1)
+├── synonyms.py              # 100+ food synonym groups → bidirectional lookup
+├── parse_nutrition5k.py     # load GT CSVs, locate image files
+├── run_eval.py              # Ollama / OpenAI-compat API runner
+├── run_eval_mlx.py          # Apple Silicon MLX runner (Qwen3-VL-8B bf16)
+├── run_eval_bedrock.py      # AWS Bedrock runner (Llama4, Nova, etc.)
+├── plot_analysis.py         # generate all 6 analysis plots
+├── analyze_failures.py      # per-dish failure categorization
+├── plots/                   # generated PNG plots
+├── results/                 # eval result JSONs (per-dish scores)
+└── data/nutrition5k/        # dataset (gitignored)
+```
 
 ---
 
-## Extending to Other Models
+## Running the Evals
 
-The runner calls Ollama's `/api/chat` endpoint. To test Gemini 2.5 Flash or Llama 3.2-90B-Vision via cloud APIs, replace `call_ollama()` in `run_eval.py` with your provider's client — the rest of the pipeline (metric, parsing, output) is model-agnostic.
+### AWS Bedrock (fastest — 507 dishes in ~20 min)
+
+```bash
+cd eval
+pip install boto3 tqdm
+aws sso login --profile agebold-ds
+
+# Llama4 Maverick
+python3 run_eval_bedrock.py --model us.meta.llama4-maverick-17b-instruct-v1:0 --delay 0.5
+
+# Nova Lite
+python3 run_eval_bedrock.py --model us.amazon.nova-lite-v1:0 --delay 0.3
+
+# Any Bedrock model with vision support
+python3 run_eval_bedrock.py --model <model-id> --out results/mymodel.json
+```
+
+Runs resume automatically if interrupted (incremental save after each dish).
+
+### Apple Silicon / MLX (local, unquantized)
+
+```bash
+cd eval
+pip install mlx-vlm tqdm
+
+# Convert bf16 model from HuggingFace (one-time, ~16 GB)
+mlx_vlm.convert --hf-path Qwen/Qwen3-VL-8B-Instruct \
+                --mlx-path ./models/Qwen3-VL-8B-Instruct-bf16 \
+                --dtype bfloat16
+
+# Run (reloads model every 100 dishes to flush MLX memory state)
+python3.12 run_eval_mlx.py \
+    --model ./models/Qwen3-VL-8B-Instruct-bf16 \
+    --out results/qwen3vl_8b_bf16_full.json \
+    --reload-every 100
+```
+
+**Note on MLX memory:** After ~100 consecutive inference calls, the Metal allocator accumulates state and model outputs degrade to empty responses. The `--reload-every` flag deletes the old model before reloading to avoid double-loading 16 GB on 24 GB unified memory.
+
+### Generate Plots
+
+```bash
+cd eval
+python3 plot_analysis.py
+# Saves 6 plots to eval/plots/
+```
+
+### Failure Analysis
+
+```bash
+cd eval
+python3 analyze_failures.py results/bedrock_llama4_maverick_full.json --top 20
+```
 
 ---
 
-## What's Not Solved
+## Benchmark Limitations
 
-1. **Synonym lists are incomplete.** The paper's synonym lists are not published. Our `synonyms.py` covers ~100 common equivalences but will undercount semantic matches, slightly depressing recall.
+**1. Ground truth includes invisible ingredients.** Nutrition5k was designed for nutritional estimation, not visual recognition. Many GT ingredients (olive oil, salt, vinegar, garlic) are physically impossible to identify from photos. The top missed ingredients across all models are exactly these invisible items. Any eval on this dataset that doesn't account for this will understate model performance.
 
-2. **Camera perspective matters.** PMC13092701 reports per-camera scores (A/B/C/D). Overhead images give a different view — our scores are not directly apples-to-apples with their side-camera numbers.
+**2. Recall is not a reliable metric here.** A model that correctly names every visible ingredient will still get low recall because GT is padded with invisible seasonings. Use prediction accuracy (correct/predicted) as the primary metric.
 
-3. **Prompt sensitivity.** The exact prompts used in PMC13092701 are not disclosed. Different prompt wording can swing precision by several points on this task.
+**3. Synonym lists are incomplete.** The PMC13092701 paper's synonym lists are unpublished. Our lists cover common equivalences but will miss some soft matches, slightly deflating scores uniformly across models.
+
+**4. Camera perspective.** PMC13092701 evaluated side-angle cameras (A–D). This eval uses overhead PNGs only — per-camera comparison with paper results is not direct.
+
+**5. PMC13092701 Llama 3.2-90B claim (F1=0.6626–0.6967).** This model is available in Bedrock but must be re-enabled in the AWS console (marked Legacy after 30 days inactivity). Direct comparison with the paper's reported best model is possible but not yet completed.
 
 ---
 
@@ -205,5 +248,5 @@ The runner calls Ollama's `/api/chat` endpoint. To test Gemini 2.5 Flash or Llam
 
 - **PMC13092701** — VLM food ingredient recognition study, April 2026. [Link](https://pmc.ncbi.nlm.nih.gov/articles/PMC13092701/)
 - **Nutrition5k** — Thames et al., CVPR 2021. [arXiv](https://arxiv.org/abs/2103.03375) · [Dataset](https://github.com/google-research-datasets/Nutrition5k)
-- **FoodNExTDB** — CVPR 2025 Workshop benchmark (Gemini 2.0 Flash: avg EWR 70.16). [arXiv](https://arxiv.org/abs/2504.06925)
-- **January Food Benchmark (JFB)** — arXiv August 2025, Hungarian matching + embedding cosine similarity. [arXiv](https://arxiv.org/abs/2508.09966)
+- **Llama 4 Scout/Maverick** — Meta AI, April 2025. [AWS Bedrock](https://aws.amazon.com/bedrock/)
+- **Amazon Nova** — Amazon, 2024. [AWS Bedrock](https://aws.amazon.com/bedrock/nova/)
