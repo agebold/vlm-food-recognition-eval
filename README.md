@@ -6,32 +6,47 @@ Reproducible evaluation harness for photo-based food ingredient recognition usin
 
 ## Results
 
-Full 507-dish evaluation on the Nutrition5k overhead test split. All models use the same prompt, same test images, same metric.
+Full 507-dish evaluation on the Nutrition5k overhead test split — **10 vision models** across two run sessions. All models use the same prompt, same test images, same metric. Claude Opus 4.8 was run via the Anthropic API; the other nine via AWS Bedrock (`us-east-2`).
 
-### Prediction Accuracy (honest metric)
+### Prediction accuracy
 
-**Prediction accuracy** = fraction of named ingredients that were actually in the dish. This is the only fair metric when you cannot see invisible ingredients (olive oil, salt, pepper) in a photo.
+**Prediction accuracy** = fraction of named ingredients that were actually in the dish. It's the fairest primary metric here, because you cannot see invisible ingredients (olive oil, salt, pepper) in a photo and recall punishes a model for not naming them. Rows sorted by prediction accuracy; all values computed at match threshold `sim ≥ 0.4` by [eval/prediction_metrics.py](eval/prediction_metrics.py) / [eval/plot_analysis.py](eval/plot_analysis.py).
 
-| Model | Provider | F1 | Precision | Pred Accuracy | Correct/Dish | Avg Predictions | Zero-Correct | All-Correct |
+| Model | Provider | F1 | Precision | Pred Accuracy | Correct/Dish (mean/median) | Avg Predictions | Zero-Correct | All-Correct |
 |---|---|---|---|---|---|---|---|---|
-| **Claude Opus 4.8** | Anthropic API | **0.677** | 0.714 | 82.7% | 3.30 | 4.1 | 4.7% | 37.1% |
-| Llama4 Scout 17B | AWS Bedrock | 0.655 | 0.711 | 83.8% | 2.71 | 3.2 | 5.1% | 37.7% |
-| Llama4 Maverick 17B | AWS Bedrock | 0.646 | 0.703 | **84.2%** | 2.61 | 3.1 | 5.3% | 39.5% |
-| Nova Lite | AWS Bedrock | 0.649 | 0.712 | 82.5% | 2.57 | 3.1 | 6.7% | **39.9%** |
-| Nova Pro | AWS Bedrock | 0.644 | 0.700 | 81.0% | 2.66 | 3.3 | 7.1% | 37.1% |
+| **Kimi K2.5** | Moonshot | **0.682** | **0.733** | **85.1%** | 3.0 / 2 | 3.6 | **4.5%** | 65.8% |
+| Llama4 Maverick 17B | Meta | 0.646 | 0.703 | 84.2% | 2.6 / 2 | 3.1 | 5.3% | **66.4%** |
+| Llama4 Scout 17B | Meta | 0.655 | 0.711 | 83.8% | 2.7 / 2 | 3.2 | 5.1% | 64.7% |
+| Qwen3-VL 235B | Alibaba | 0.667 | 0.723 | 83.7% | 2.7 / 2 | 3.3 | 5.1% | 63.6% |
+| Claude Opus 4.8 | Anthropic | 0.677 | 0.714 | 82.7% | 3.3 / 3 | 4.1 | 4.7% | 58.0% |
+| Nova Lite | Amazon | 0.649 | 0.712 | 82.5% | 2.6 / 2 | 3.1 | 6.7% | 65.2% |
+| Nova Pro | Amazon | 0.644 | 0.700 | 81.0% | 2.7 / 2 | 3.3 | 7.1% | 61.5% |
+| Sonnet 4.6 | Anthropic | 0.649 | 0.673 | 79.0% | **3.6 / 3** | 4.6 | 5.5% | 51.8% |
+| Nova 2 Lite | Amazon | 0.614 | 0.666 | 76.8% | 2.6 / 2 | 3.2 | 10.9% | 57.5% |
+| Haiku 4.5 | Anthropic | 0.580 | 0.611 | 72.0% | 2.9 / 2 | 3.9 | 11.3% | 45.7% |
 
-### What these numbers actually mean
+- **Pred Accuracy** — per-dish (correct ÷ predicted), averaged over dishes.
+- **Zero-Correct** — % of dishes where the model got nothing right.
+- **All-Correct** — % of dishes where *every* ingredient the model named was real.
 
-**Claude's F1 lead is an artifact of verbosity, not accuracy.** Claude names 4.1 ingredients per dish; Maverick names 3.1. Claude gets more right in absolute terms (3.3 vs 2.6) but its *rate* of being correct (82.7%) is lower than Maverick's (84.2%). When you ask "for each thing the model named, was it actually there?" — Maverick wins.
+### What these numbers mean
 
-The F1 metric rewards predicting more things (higher recall numerator) even when those things aren't visible in the photo. This inflates Claude's score but doesn't reflect real-world usefulness.
+**Kimi K2.5 leads, and the disciplined models win generally.** Kimi tops F1 (0.682), precision (0.733), and prediction accuracy (85.1%) while naming only 3.6 ingredients per dish. The next tier — Maverick, Scout, Qwen3-VL — all sit at 83–84% accuracy with ~3 predictions/dish. High accuracy comes from naming what you can actually see, not from guessing more.
 
-**Cost comparison (per 507 dishes):**
-- Claude Opus 4.8 (vision): ~$0.80–1.20
-- Llama4 Maverick (Bedrock): ~$0.02–0.05
-- Nova Lite (Bedrock): ~$0.003–0.005
+**Verbosity inflates F1 but not accuracy — clearest in Sonnet 4.6 and Claude Opus.** Sonnet names the most ingredients (4.6/dish), so it has the highest *absolute* correct count (3.6/dish) — yet its *rate* of being right is only 79.0%. Claude Opus shows the same pattern (4.1 predictions, 82.7% accuracy). When you ask "for each thing the model named, was it actually there?", the chatty models drop below the disciplined ones.
 
-At 10–40x cheaper with *higher* prediction accuracy, Maverick and Nova Lite are the practical choices for this task.
+**The small models are the least reliable.** Haiku 4.5 (72.0%) and Nova 2 Lite (76.8%) have the lowest accuracy *and* the highest zero-detection (11.3% / 10.9%) — nothing right on ~1 dish in 9, versus ~1 in 20 for the leaders.
+
+**Third-party models (Kimi, Maverick, Scout, Qwen) beat every Anthropic/Amazon option on prediction accuracy.**
+
+**Cost comparison (per 507 dishes, approx):**
+- Claude Opus 4.8 / Sonnet 4.6 (vision): ~\$0.80–1.20
+- Kimi K2.5, Qwen3-VL, Llama4 Maverick/Scout (Bedrock): ~\$0.02–0.08
+- Nova Lite / Nova 2 Lite (Bedrock): ~\$0.003–0.01
+
+At 10–40× cheaper with *higher* prediction accuracy, the open/third-party Bedrock models are the practical choices for this task.
+
+> **All-Correct definition:** % of dishes where every ingredient the model named was real (`sim ≥ 0.4`), computed uniformly across all 10 rows. An earlier README revision computed this one column differently for the first five models; it has been recomputed consistently. F1, precision, accuracy, correct/dish, and zero-correct are unchanged from prior runs.
 
 ---
 
@@ -48,17 +63,17 @@ Nutrition5k's ground truth includes ingredients that are **physically invisible 
 | Aromatics cooked in | garlic, shallots, onions | Minced/diced and hidden inside other foods |
 | Acid/liquid components | vinegar, lemon juice | Clear liquids poured on and invisible |
 
-The top missed ingredients across all 5 models confirm this — the leaderboard of "misses" is dominated by invisible ingredients:
+The top missed ingredients across all 10 models confirm this — the leaderboard of "misses" is dominated by invisible ingredients:
 
-| Ingredient | Times missed (across 5 models × 507 dishes) |
+| Ingredient | Times missed (across 10 models × 507 dishes) |
 |---|---|
-| olive oil | 877 |
-| salt | 595 |
-| pepper | 363 |
-| garlic | 344 |
-| mustard | 312 |
-| vinegar | 277 |
-| lemon juice | 206 |
+| olive oil | 1646 |
+| salt | 1213 |
+| pepper | 684 |
+| garlic | 650 |
+| mustard | 641 |
+| vinegar | 524 |
+| arugula | 413 |
 
 A model that correctly answers "I see chicken, rice, broccoli, and cherry tomatoes" will get low recall because GT also includes olive oil, salt, and garlic that are invisible. Recall punishes perfect visual predictions for not hallucinating invisible ingredients. **Don't use recall as a standalone metric on this dataset.**
 
@@ -162,7 +177,12 @@ eval/
 ├── parse_nutrition5k.py     # load GT CSVs, locate image files
 ├── run_eval.py              # Ollama / OpenAI-compat API runner
 ├── run_eval_mlx.py          # Apple Silicon MLX runner (Qwen3-VL-8B bf16)
-├── run_eval_bedrock.py      # AWS Bedrock runner (Llama4, Nova, etc.)
+├── run_eval_bedrock.py      # AWS Bedrock runner (single model, CLI args)
+├── bedrock_core.py          # shared Bedrock eval core (Converse, backoff, resume)
+├── eval_*.py                # per-model evaluators (haiku45, sonnet46, nova2lite, qwen3vl, kimi25)
+├── run_all_bedrock.sh       # launch the 5 evaluators in parallel
+├── compare_bedrock.py       # P/R/F1 comparison table
+├── prediction_metrics.py    # prediction-accuracy / correct-per-dish table
 ├── plot_analysis.py         # generate all 6 analysis plots
 ├── analyze_failures.py      # per-dish failure categorization
 ├── plots/                   # generated PNG plots
@@ -192,6 +212,22 @@ python3 run_eval_bedrock.py --model <model-id> --out results/mymodel.json
 ```
 
 Runs resume automatically if interrupted (incremental save after each dish).
+
+#### Run several models in parallel (one process per model)
+
+Each model has its own Bedrock rate-limit bucket (`account × region × model`), so running different models concurrently is safe — they never contend. The launcher fans out 5 evaluators (Haiku 4.5, Sonnet 4.6, Nova 2 Lite, Qwen3-VL, Kimi K2.5) in `us-east-2`:
+
+```bash
+cd eval
+export AWS_PROFILE=agebold-ds
+./run_all_bedrock.sh             # full 507-dish run, all 5 in parallel
+./run_all_bedrock.sh --limit 3   # smoke test first
+
+python3 compare_bedrock.py       # F1/P/R table
+python3 prediction_metrics.py    # prediction-accuracy / correct-per-dish table
+```
+
+Per-model config (model id, region, delay, max tokens) lives in the thin `eval/eval_<model>.py` scripts; shared logic — Converse-with-image, exponential backoff on `ThrottlingException`, resume — is in [eval/bedrock_core.py](eval/bedrock_core.py).
 
 ### Apple Silicon / MLX (local, unquantized)
 
@@ -225,7 +261,7 @@ python3 plot_analysis.py
 
 ```bash
 cd eval
-python3 analyze_failures.py results/bedrock_llama4_maverick_full.json --top 20
+python3 analyze_failures.py results/bedrock_kimi25_overhead.json --top 20
 ```
 
 ---

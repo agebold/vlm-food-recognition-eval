@@ -27,13 +27,19 @@ PLOT_DIR = pathlib.Path("plots")
 PLOT_DIR.mkdir(exist_ok=True)
 
 MODELS = {
-    "Claude Opus 4.8":     "results/claude_opus_overhead_full.json",
-    "Llama4 Scout 17B":    "results/bedrock_llama4_scout_full.json",
+    "Kimi K2.5":           "results/bedrock_kimi25_overhead.json",
     "Llama4 Maverick 17B": "results/bedrock_llama4_maverick_full.json",
-    "Nova Pro":            "results/bedrock_nova_pro_full.json",
+    "Llama4 Scout 17B":    "results/bedrock_llama4_scout_full.json",
+    "Qwen3-VL 235B":       "results/bedrock_qwen3vl_overhead.json",
+    "Claude Opus 4.8":     "results/claude_opus_overhead_full.json",
     "Nova Lite":           "results/bedrock_nova_lite_full.json",
+    "Nova Pro":            "results/bedrock_nova_pro_full.json",
+    "Sonnet 4.6":          "results/bedrock_sonnet46_overhead.json",
+    "Nova 2 Lite":         "results/bedrock_nova2lite_overhead.json",
+    "Haiku 4.5":           "results/bedrock_haiku45_overhead.json",
 }
-COLORS = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"]
+COLORS = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f",
+          "#edc948", "#b07aa1", "#ff9da7", "#9c755f", "#bab0ac"]
 
 
 def load(path):
