@@ -1,0 +1,3010 @@
+{
+  "model": "mlx-community/Qwen3-VL-8B-Instruct-4bit",
+  "provider": "mlx",
+  "mode": "overhead",
+  "cameras": [
+    "overhead"
+  ],
+  "n_dishes": 507,
+  "n_samples": 123,
+  "n_skipped": 0,
+  "aggregate": {
+    "precision": 0.6667868455955873,
+    "recall": 0.599144784109429,
+    "f1": 0.6188336823385675,
+    "n": 123
+  },
+  "per_camera": {
+    "overhead": {
+      "precision": 0.6667868455955873,
+      "recall": 0.599144784109429,
+      "f1": 0.6188336823385675,
+      "n": 123
+    }
+  },
+  "samples": [
+    {
+      "dish_id": "dish_1565035746",
+      "camera": "overhead",
+      "predicted": [
+        "cauliflower",
+        "onion"
+      ],
+      "ground_truth": [
+        "onions",
+        "cauliflower"
+      ],
+      "scores": {
+        "precision": 0.9545454545454546,
+        "recall": 0.9545454545454546,
+        "f1": 0.9545454545454546
+      },
+      "raw_response": "[\"cauliflower\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1558639818",
+      "camera": "overhead",
+      "predicted": [
+        "melon"
+      ],
+      "ground_truth": [
+        "cantaloupe"
+      ],
+      "scores": {
+        "precision": 0.26666666666666666,
+        "recall": 0.26666666666666666,
+        "f1": 0.26666666666666666
+      },
+      "raw_response": "[\"melon\"]"
+    },
+    {
+      "dish_id": "dish_1558549605",
+      "camera": "overhead",
+      "predicted": [
+        "rice"
+      ],
+      "ground_truth": [
+        "white rice"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"rice\"]"
+    },
+    {
+      "dish_id": "dish_1565898402",
+      "camera": "overhead",
+      "predicted": [
+        "steak",
+        "rice",
+        "spinach",
+        "green beans",
+        "cherry tomatoes",
+        "carrots",
+        "olives"
+      ],
+      "ground_truth": [
+        "garlic",
+        "salmon",
+        "green beans",
+        "vinegar",
+        "ginger",
+        "jalapenos",
+        "spinach (raw)",
+        "onions",
+        "lime",
+        "shallots",
+        "cilantro",
+        "millet",
+        "bok choy",
+        "spinach (cooked)",
+        "brown rice",
+        "beef",
+        "olive oil",
+        "lemon juice",
+        "salt",
+        "chili"
+      ],
+      "scores": {
+        "precision": 0.6187916026625704,
+        "recall": 0.5023539745278875,
+        "f1": 0.5545264189169907
+      },
+      "raw_response": "[\"steak\", \"rice\", \"spinach\", \"green beans\", \"cherry tomatoes\", \"carrots\", \"olives\"]"
+    },
+    {
+      "dish_id": "dish_1566328724",
+      "camera": "overhead",
+      "predicted": [
+        "chicken"
+      ],
+      "ground_truth": [
+        "chicken"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"chicken\"]"
+    },
+    {
+      "dish_id": "dish_1566838351",
+      "camera": "overhead",
+      "predicted": [
+        "watermelon",
+        "pineapple",
+        "blackberry",
+        "raspberry"
+      ],
+      "ground_truth": [
+        "berries",
+        "watermelon",
+        "pineapple"
+      ],
+      "scores": {
+        "precision": 0.7426470588235294,
+        "recall": 0.8333333333333334,
+        "f1": 0.7853810264385691
+      },
+      "raw_response": "[\"watermelon\", \"pineapple\", \"blackberry\", \"raspberry\"]"
+    },
+    {
+      "dish_id": "dish_1567107839",
+      "camera": "overhead",
+      "predicted": [
+        "fish",
+        "rice",
+        "spinach",
+        "onion"
+      ],
+      "ground_truth": [
+        "bell peppers",
+        "cilantro",
+        "lime",
+        "onions",
+        "kale",
+        "salt",
+        "olive oil",
+        "ketchup",
+        "jalapenos",
+        "fish",
+        "shallots",
+        "white rice"
+      ],
+      "scores": {
+        "precision": 0.8181818181818181,
+        "recall": 0.48239607614607616,
+        "f1": 0.606942037668472
+      },
+      "raw_response": "[\"fish\", \"rice\", \"spinach\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1558639787",
+      "camera": "overhead",
+      "predicted": [
+        "cauliflower"
+      ],
+      "ground_truth": [
+        "cauliflower"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"cauliflower\"]"
+    },
+    {
+      "dish_id": "dish_1562788601",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "rice",
+        "carrots",
+        "corn",
+        "spinach",
+        "pineapple"
+      ],
+      "ground_truth": [
+        "fish",
+        "vinegar",
+        "corn on the cob",
+        "brown rice",
+        "country rice",
+        "basil",
+        "green onions",
+        "salt",
+        "cherry tomatoes",
+        "pepper",
+        "pork",
+        "lemon juice",
+        "parsley",
+        "pilaf",
+        "olive oil",
+        "onions",
+        "garlic",
+        "broccoli",
+        "shallots"
+      ],
+      "scores": {
+        "precision": 0.5388623072833599,
+        "recall": 0.45689462891678956,
+        "f1": 0.4945048032765866
+      },
+      "raw_response": "[\"chicken\", \"rice\", \"carrots\", \"corn\", \"spinach\", \"pineapple\"]"
+    },
+    {
+      "dish_id": "dish_1560456326",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "arugula"
+      ],
+      "ground_truth": [
+        "thyme",
+        "zucchini",
+        "lemon juice",
+        "salt",
+        "garlic",
+        "rosemary",
+        "parsley",
+        "chicken",
+        "vinegar",
+        "arugula",
+        "pepper",
+        "wheat berry",
+        "olive oil",
+        "squash",
+        "basil",
+        "mustard",
+        "lettuce",
+        "mixed greens",
+        "pumpkin seeds",
+        "carrot",
+        "spinach (raw)"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 0.37943483695363395,
+        "f1": 0.5501308605364555
+      },
+      "raw_response": "[\"chicken\", \"arugula\"]"
+    },
+    {
+      "dish_id": "dish_1564427430",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "olives"
+      ],
+      "ground_truth": [
+        "grilled chicken",
+        "olives"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"chicken\", \"olives\"]"
+    },
+    {
+      "dish_id": "dish_1565896662",
+      "camera": "overhead",
+      "predicted": [
+        "rhubarb",
+        "spinach"
+      ],
+      "ground_truth": [
+        "chard",
+        "kale"
+      ],
+      "scores": {
+        "precision": 0.41666666666666663,
+        "recall": 0.34090909090909094,
+        "f1": 0.37500000000000006
+      },
+      "raw_response": "[\"rhubarb\", \"spinach\"]"
+    },
+    {
+      "dish_id": "dish_1566414342",
+      "camera": "overhead",
+      "predicted": [
+        "potatoes",
+        "red pepper",
+        "onion",
+        "cucumber",
+        "quinoa",
+        "chicken",
+        "spinach",
+        "cheese"
+      ],
+      "ground_truth": [
+        "garlic",
+        "pepper",
+        "mushroom",
+        "oregano",
+        "cream",
+        "wheat berry",
+        "butter",
+        "basil",
+        "salt",
+        "shallots",
+        "white wine",
+        "chicken",
+        "quinoa",
+        "arugula",
+        "thyme",
+        "olive oil",
+        "rosemary",
+        "lemon juice",
+        "roasted potatoes"
+      ],
+      "scores": {
+        "precision": 0.6585393772893773,
+        "recall": 0.4766317274057212,
+        "f1": 0.553010483906619
+      },
+      "raw_response": "[\"potatoes\", \"red pepper\", \"onion\", \"cucumber\", \"quinoa\", \"chicken\", \"spinach\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1562617703",
+      "camera": "overhead",
+      "predicted": [
+        "ice cream"
+      ],
+      "ground_truth": [
+        "frozen yogurt"
+      ],
+      "scores": {
+        "precision": 0.2727272727272727,
+        "recall": 0.2727272727272727,
+        "f1": 0.2727272727272727
+      },
+      "raw_response": "[\"ice cream\"]"
+    },
+    {
+      "dish_id": "dish_1565020926",
+      "camera": "overhead",
+      "predicted": [
+        "berries",
+        "blackberries",
+        "grapes",
+        "chia seeds",
+        "cream",
+        "bacon"
+      ],
+      "ground_truth": [
+        "olive oil",
+        "sweet potato",
+        "grapes",
+        "berries",
+        "greek yogurt",
+        "egg whites",
+        "chia seeds",
+        "milk",
+        "bacon"
+      ],
+      "scores": {
+        "precision": 0.850079744816587,
+        "recall": 0.6235959030076678,
+        "f1": 0.7194340856213237
+      },
+      "raw_response": "[\"berries\", \"blackberries\", \"grapes\", \"chia seeds\", \"cream\", \"bacon\"]"
+    },
+    {
+      "dish_id": "dish_1564689168",
+      "camera": "overhead",
+      "predicted": [
+        "tofu",
+        "chickpeas",
+        "lettuce",
+        "onion",
+        "carrot",
+        "olive",
+        "cucumber"
+      ],
+      "ground_truth": [
+        "lime",
+        "parsley",
+        "blueberries",
+        "vinegar",
+        "arugula",
+        "mustard",
+        "onions",
+        "almonds",
+        "mixed greens",
+        "carrot",
+        "salt",
+        "pears",
+        "garlic",
+        "pepper",
+        "spinach (raw)",
+        "tofu",
+        "lemon juice",
+        "cucumbers",
+        "olive oil",
+        "chickpeas",
+        "cherry tomatoes",
+        "lettuce"
+      ],
+      "scores": {
+        "precision": 0.937793299137837,
+        "recall": 0.5726464040072258,
+        "f1": 0.7110829506602013
+      },
+      "raw_response": "[\"tofu\", \"chickpeas\", \"lettuce\", \"onion\", \"carrot\", \"olive\", \"cucumber\"]"
+    },
+    {
+      "dish_id": "dish_1560456348",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "green beans",
+        "arugula"
+      ],
+      "ground_truth": [
+        "parsley",
+        "pumpkin seeds",
+        "garlic",
+        "olive oil",
+        "thyme",
+        "zucchini",
+        "spinach (raw)",
+        "vinegar",
+        "pepper",
+        "salt",
+        "mixed greens",
+        "carrot",
+        "green beans",
+        "lemon juice",
+        "mustard",
+        "arugula",
+        "rosemary",
+        "wheat berry",
+        "squash",
+        "chicken",
+        "basil",
+        "lettuce"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 0.4408631010423433,
+        "f1": 0.6119430787330399
+      },
+      "raw_response": "[\"chicken\", \"green beans\", \"arugula\"]"
+    },
+    {
+      "dish_id": "dish_1558641287",
+      "camera": "overhead",
+      "predicted": [
+        "tomato"
+      ],
+      "ground_truth": [
+        "cherry tomatoes"
+      ],
+      "scores": {
+        "precision": 0.5714285714285714,
+        "recall": 0.5714285714285714,
+        "f1": 0.5714285714285714
+      },
+      "raw_response": "[\"tomato\"]"
+    },
+    {
+      "dish_id": "dish_1558373008",
+      "camera": "overhead",
+      "predicted": [
+        "dates"
+      ],
+      "ground_truth": [
+        "sausage"
+      ],
+      "scores": {
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "f1": 0.3333333333333333
+      },
+      "raw_response": "[\"dates\"]"
+    },
+    {
+      "dish_id": "dish_1561577947",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "arugula",
+        "penne pasta",
+        "tomato",
+        "olive oil"
+      ],
+      "ground_truth": [
+        "olive oil",
+        "basil",
+        "arugula",
+        "blueberries",
+        "vinegar",
+        "mustard",
+        "walnuts",
+        "white wine",
+        "salt",
+        "rosemary",
+        "oregano",
+        "cream",
+        "mushroom",
+        "wheat berry",
+        "chard",
+        "pepper",
+        "chicken",
+        "shallots",
+        "garlic",
+        "butter",
+        "lemon juice",
+        "thyme"
+      ],
+      "scores": {
+        "precision": 0.76289592760181,
+        "recall": 0.44503010358625333,
+        "f1": 0.5621398081010565
+      },
+      "raw_response": "[\"chicken\", \"arugula\", \"penne pasta\", \"tomato\", \"olive oil\"]"
+    },
+    {
+      "dish_id": "dish_1558639440",
+      "camera": "overhead",
+      "predicted": [
+        "apple"
+      ],
+      "ground_truth": [
+        "apple"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"apple\"]"
+    },
+    {
+      "dish_id": "dish_1565894889",
+      "camera": "overhead",
+      "predicted": [
+        "cheese",
+        "bread",
+        "cookie"
+      ],
+      "ground_truth": [
+        "cheese pizza",
+        "cookies"
+      ],
+      "scores": {
+        "precision": 0.6083459024635495,
+        "recall": 0.7948717948717949,
+        "f1": 0.6892116601898043
+      },
+      "raw_response": "[\"cheese\", \"bread\", \"cookie\"]"
+    },
+    {
+      "dish_id": "dish_1561147944",
+      "camera": "overhead",
+      "predicted": [
+        "lettuce",
+        "carrot",
+        "walnut"
+      ],
+      "ground_truth": [
+        "olive oil",
+        "mustard",
+        "carrot",
+        "salt",
+        "raspberries",
+        "almonds",
+        "arugula",
+        "vinegar",
+        "chard",
+        "blueberries"
+      ],
+      "scores": {
+        "precision": 0.6545454545454545,
+        "recall": 0.44663444398738517,
+        "f1": 0.5309623714433632
+      },
+      "raw_response": "[\"lettuce\", \"carrot\", \"walnut\"]"
+    },
+    {
+      "dish_id": "dish_1557937079",
+      "camera": "overhead",
+      "predicted": [
+        "bacon"
+      ],
+      "ground_truth": [
+        "bacon"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"bacon\"]"
+    },
+    {
+      "dish_id": "dish_1558641320",
+      "camera": "overhead",
+      "predicted": [
+        "apple",
+        "corn",
+        "tomato",
+        "carrot"
+      ],
+      "ground_truth": [
+        "apple",
+        "carrot",
+        "corn on the cob",
+        "cherry tomatoes"
+      ],
+      "scores": {
+        "precision": 0.7481203007518797,
+        "recall": 0.7481203007518797,
+        "f1": 0.7481203007518797
+      },
+      "raw_response": "[\"apple\", \"corn\", \"tomato\", \"carrot\"]"
+    },
+    {
+      "dish_id": "dish_1567007848",
+      "camera": "overhead",
+      "predicted": [
+        "strawberry",
+        "blueberry",
+        "blackberry",
+        "watermelon",
+        "pineapple",
+        "melon"
+      ],
+      "ground_truth": [
+        "watermelon",
+        "raspberries",
+        "berries",
+        "cantaloupe",
+        "pineapple"
+      ],
+      "scores": {
+        "precision": 0.7023809523809524,
+        "recall": 0.6984962406015038,
+        "f1": 0.7004332102283619
+      },
+      "raw_response": "[\"strawberry\", \"blueberry\", \"blackberry\", \"watermelon\", \"pineapple\", \"melon\"]"
+    },
+    {
+      "dish_id": "dish_1565810969",
+      "camera": "overhead",
+      "predicted": [
+        "spinach"
+      ],
+      "ground_truth": [
+        "spinach (raw)"
+      ],
+      "scores": {
+        "precision": 0.7,
+        "recall": 0.7,
+        "f1": 0.7
+      },
+      "raw_response": "[\"spinach\"]"
+    },
+    {
+      "dish_id": "dish_1562168800",
+      "camera": "overhead",
+      "predicted": [
+        "potatoes",
+        "strawberries",
+        "blueberries",
+        "lettuce",
+        "cucumber"
+      ],
+      "ground_truth": [
+        "roasted potatoes",
+        "mixed greens",
+        "berries",
+        "raspberries",
+        "honeydew melons",
+        "vinaigrette",
+        "granola",
+        "blackberries"
+      ],
+      "scores": {
+        "precision": 0.6152657004830917,
+        "recall": 0.5470364176885916,
+        "f1": 0.5791484665766004
+      },
+      "raw_response": "[\"potatoes\", \"strawberries\", \"blueberries\", \"lettuce\", \"cucumber\"]"
+    },
+    {
+      "dish_id": "dish_1564687046",
+      "camera": "overhead",
+      "predicted": [
+        "steak",
+        "green beans",
+        "salsa",
+        "fish"
+      ],
+      "ground_truth": [
+        "white rice",
+        "salt",
+        "shallots",
+        "olive oil",
+        "onions",
+        "jalapenos",
+        "steak",
+        "green beans",
+        "bell peppers",
+        "millet",
+        "cilantro",
+        "kale",
+        "ketchup",
+        "vinegar",
+        "spinach (raw)",
+        "fish",
+        "lime"
+      ],
+      "scores": {
+        "precision": 0.9166666666666666,
+        "recall": 0.470281451995007,
+        "f1": 0.6216401683595805
+      },
+      "raw_response": "[\"steak\", \"green beans\", \"salsa\", \"fish\"]"
+    },
+    {
+      "dish_id": "dish_1563221054",
+      "camera": "overhead",
+      "predicted": [
+        "spinach",
+        "egg",
+        "carrot",
+        "crouton",
+        "meat"
+      ],
+      "ground_truth": [
+        "chicken breast",
+        "cherry tomatoes",
+        "vinegar",
+        "white rice",
+        "pork",
+        "wheat berry",
+        "spinach (raw)",
+        "onions",
+        "zucchini",
+        "parsley",
+        "rosemary",
+        "olive oil",
+        "parmesan cheese",
+        "thyme",
+        "mustard",
+        "arugula",
+        "cranberries",
+        "garlic",
+        "salt",
+        "apple"
+      ],
+      "scores": {
+        "precision": 0.5075457875457875,
+        "recall": 0.3712975586504998,
+        "f1": 0.4288603028849836
+      },
+      "raw_response": "[\"spinach\", \"egg\", \"carrot\", \"crouton\", \"meat\"]"
+    },
+    {
+      "dish_id": "dish_1565898361",
+      "camera": "overhead",
+      "predicted": [
+        "steak",
+        "rice",
+        "spinach",
+        "cherry tomatoes",
+        "carrots",
+        "olives"
+      ],
+      "ground_truth": [
+        "brown rice",
+        "ginger",
+        "vinegar",
+        "beef",
+        "salmon",
+        "spinach (cooked)",
+        "millet",
+        "lime",
+        "onions",
+        "spinach (raw)",
+        "jalapenos",
+        "bok choy",
+        "shallots",
+        "garlic",
+        "chili",
+        "cilantro",
+        "salt",
+        "lemon juice",
+        "olive oil"
+      ],
+      "scores": {
+        "precision": 0.5552568697729988,
+        "recall": 0.47528488546795183,
+        "f1": 0.5121678891965898
+      },
+      "raw_response": "[\"steak\", \"rice\", \"spinach\", \"cherry tomatoes\", \"carrots\", \"olives\"]"
+    },
+    {
+      "dish_id": "dish_1560367926",
+      "camera": "overhead",
+      "predicted": [
+        "pizza",
+        "chicken",
+        "pepper",
+        "olive",
+        "cheese"
+      ],
+      "ground_truth": [
+        "onions",
+        "fish",
+        "garlic",
+        "salt",
+        "green onions",
+        "olive oil",
+        "pizza",
+        "country rice"
+      ],
+      "scores": {
+        "precision": 0.5381787802840434,
+        "recall": 0.4550486063643958,
+        "f1": 0.4931348193479239
+      },
+      "raw_response": "[\"pizza\", \"chicken\", \"pepper\", \"olive\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1560444869",
+      "camera": "overhead",
+      "predicted": [
+        "watermelon"
+      ],
+      "ground_truth": [
+        "honeydew melons"
+      ],
+      "scores": {
+        "precision": 0.48,
+        "recall": 0.48,
+        "f1": 0.48
+      },
+      "raw_response": "[\"watermelon\"]"
+    },
+    {
+      "dish_id": "dish_1559850283",
+      "camera": "overhead",
+      "predicted": [
+        "almonds"
+      ],
+      "ground_truth": [
+        "almonds"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"almonds\"]"
+    },
+    {
+      "dish_id": "dish_1566502505",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "spinach",
+        "corn",
+        "rice",
+        "cheese"
+      ],
+      "ground_truth": [
+        "sun dried tomatoes",
+        "bok choy",
+        "pork",
+        "corn on the cob",
+        "cucumbers",
+        "onions",
+        "salt",
+        "soy sauce",
+        "garlic",
+        "sugar",
+        "pepper",
+        "white rice",
+        "vinegar",
+        "spinach (raw)",
+        "mustard",
+        "olive oil"
+      ],
+      "scores": {
+        "precision": 0.6141176470588234,
+        "recall": 0.4408996431200378,
+        "f1": 0.5132887469096338
+      },
+      "raw_response": "[\"chicken\", \"spinach\", \"corn\", \"rice\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1565811091",
+      "camera": "overhead",
+      "predicted": [
+        "spinach",
+        "broccoli",
+        "carrots",
+        "feta cheese"
+      ],
+      "ground_truth": [
+        "broccoli",
+        "spinach (raw)",
+        "carrot",
+        "chicken",
+        "goat cheese"
+      ],
+      "scores": {
+        "precision": 0.8375874125874125,
+        "recall": 0.7367365967365967,
+        "f1": 0.78393176520763
+      },
+      "raw_response": "[\"spinach\", \"broccoli\", \"carrots\", \"feta cheese\"]"
+    },
+    {
+      "dish_id": "dish_1561739265",
+      "camera": "overhead",
+      "predicted": [
+        "broccoli",
+        "sweet potato",
+        "blackberry",
+        "raspberry",
+        "rice",
+        "cheese",
+        "olive"
+      ],
+      "ground_truth": [
+        "sweet potato",
+        "hash browns",
+        "broccoli",
+        "egg whites",
+        "berries"
+      ],
+      "scores": {
+        "precision": 0.6341599576893694,
+        "recall": 0.6640909090909091,
+        "f1": 0.648780406910772
+      },
+      "raw_response": "[\"broccoli\", \"sweet potato\", \"blackberry\", \"raspberry\", \"rice\", \"cheese\", \"olive\"]"
+    },
+    {
+      "dish_id": "dish_1558373159",
+      "camera": "overhead",
+      "predicted": [
+        "apple",
+        "almonds",
+        "sausage"
+      ],
+      "ground_truth": [
+        "sausage",
+        "deprecated",
+        "almonds"
+      ],
+      "scores": {
+        "precision": 0.7777777777777778,
+        "recall": 0.7555555555555555,
+        "f1": 0.7665056360708535
+      },
+      "raw_response": "[\"apple\", \"almonds\", \"sausage\"]"
+    },
+    {
+      "dish_id": "dish_1565035830",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "cauliflower",
+        "tomato",
+        "green pepper",
+        "onion"
+      ],
+      "ground_truth": [
+        "cherry tomatoes",
+        "chicken breast",
+        "bell peppers",
+        "cauliflower",
+        "onions"
+      ],
+      "scores": {
+        "precision": 0.8294372294372294,
+        "recall": 0.8294372294372294,
+        "f1": 0.8294372294372294
+      },
+      "raw_response": "[\"chicken\", \"cauliflower\", \"tomato\", \"green pepper\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1562788568",
+      "camera": "overhead",
+      "predicted": [
+        "rice",
+        "carrots",
+        "corn",
+        "greens",
+        "garlic",
+        "fish"
+      ],
+      "ground_truth": [
+        "garlic",
+        "pilaf",
+        "green onions",
+        "onions",
+        "country rice",
+        "olive oil",
+        "salt",
+        "corn on the cob",
+        "fish"
+      ],
+      "scores": {
+        "precision": 0.6752259436469963,
+        "recall": 0.5464037586844603,
+        "f1": 0.6040226311882465
+      },
+      "raw_response": "[\"rice\", \"carrots\", \"corn\", \"greens\", \"garlic\", \"fish\"]"
+    },
+    {
+      "dish_id": "dish_1558546558",
+      "camera": "overhead",
+      "predicted": [
+        "almonds"
+      ],
+      "ground_truth": [
+        "almonds"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"almonds\"]"
+    },
+    {
+      "dish_id": "dish_1562788536",
+      "camera": "overhead",
+      "predicted": [
+        "rice",
+        "corn",
+        "carrots",
+        "spinach",
+        "garlic"
+      ],
+      "ground_truth": [
+        "pilaf",
+        "corn on the cob"
+      ],
+      "scores": {
+        "precision": 0.3394774815827447,
+        "recall": 0.4605263157894737,
+        "f1": 0.3908439294921263
+      },
+      "raw_response": "[\"rice\", \"corn\", \"carrots\", \"spinach\", \"garlic\"]"
+    },
+    {
+      "dish_id": "dish_1564428181",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "rice",
+        "arugula",
+        "olives",
+        "onion"
+      ],
+      "ground_truth": [
+        "garlic",
+        "olive oil",
+        "parsley",
+        "pecans",
+        "lemon juice",
+        "salt",
+        "shallots",
+        "pepper",
+        "arugula",
+        "vinegar",
+        "chard",
+        "quinoa",
+        "thyme",
+        "pork",
+        "mustard",
+        "wheat berry",
+        "jalapenos",
+        "mayonnaise",
+        "carrot",
+        "cabbage",
+        "blueberries"
+      ],
+      "scores": {
+        "precision": 0.6057142857142856,
+        "recall": 0.39865308982956044,
+        "f1": 0.48083973540688485
+      },
+      "raw_response": "[\"chicken\", \"rice\", \"arugula\", \"olives\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1558639876",
+      "camera": "overhead",
+      "predicted": [
+        "cauliflower",
+        "sweet potato",
+        "papaya"
+      ],
+      "ground_truth": [
+        "carrot",
+        "cantaloupe",
+        "cauliflower"
+      ],
+      "scores": {
+        "precision": 0.5075757575757576,
+        "recall": 0.6097105508870214,
+        "f1": 0.5539749165891119
+      },
+      "raw_response": "[\"cauliflower\", \"sweet potato\", \"papaya\"]"
+    },
+    {
+      "dish_id": "dish_1562009810",
+      "camera": "overhead",
+      "predicted": [
+        "rice"
+      ],
+      "ground_truth": [
+        "brown rice"
+      ],
+      "scores": {
+        "precision": 0.5714285714285714,
+        "recall": 0.5714285714285714,
+        "f1": 0.5714285714285714
+      },
+      "raw_response": "[\"rice\"]"
+    },
+    {
+      "dish_id": "dish_1562790824",
+      "camera": "overhead",
+      "predicted": [
+        "spinach",
+        "rice",
+        "carrots",
+        "tofu"
+      ],
+      "ground_truth": [
+        "salt",
+        "bell peppers",
+        "garlic",
+        "mustard",
+        "cucumbers",
+        "olive oil",
+        "vinegar",
+        "country rice",
+        "onions",
+        "green onions",
+        "fish",
+        "radishes"
+      ],
+      "scores": {
+        "precision": 0.4133928571428571,
+        "recall": 0.3798549038680618,
+        "f1": 0.39591490005499536
+      },
+      "raw_response": "[\"spinach\", \"rice\", \"carrots\", \"tofu\"]"
+    },
+    {
+      "dish_id": "dish_1568401261",
+      "camera": "overhead",
+      "predicted": [
+        "tuna",
+        "sweet potato",
+        "carrot",
+        "avocado"
+      ],
+      "ground_truth": [
+        "salt",
+        "squash",
+        "carrot",
+        "avocado",
+        "tuna salad",
+        "olive oil"
+      ],
+      "scores": {
+        "precision": 0.7366071428571428,
+        "recall": 0.6095238095238095,
+        "f1": 0.6670667382584251
+      },
+      "raw_response": "[\"tuna\", \"sweet potato\", \"carrot\", \"avocado\"]"
+    },
+    {
+      "dish_id": "dish_1559841950",
+      "camera": "overhead",
+      "predicted": [
+        "broccoli"
+      ],
+      "ground_truth": [
+        "broccoli"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"broccoli\"]"
+    },
+    {
+      "dish_id": "dish_1558114145",
+      "camera": "overhead",
+      "predicted": [
+        "grapes"
+      ],
+      "ground_truth": [
+        "grapes"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"grapes\"]"
+    },
+    {
+      "dish_id": "dish_1561661324",
+      "camera": "overhead",
+      "predicted": [
+        "lettuce",
+        "parmesan cheese"
+      ],
+      "ground_truth": [
+        "caesar salad"
+      ],
+      "scores": {
+        "precision": 0.32748538011695905,
+        "recall": 0.4444444444444444,
+        "f1": 0.3771043771043771
+      },
+      "raw_response": "[\"lettuce\", \"parmesan cheese\"]"
+    },
+    {
+      "dish_id": "dish_1566414225",
+      "camera": "overhead",
+      "predicted": [
+        "quinoa",
+        "red pepper",
+        "onion",
+        "eggplant",
+        "zucchini",
+        "yellow squash"
+      ],
+      "ground_truth": [
+        "olive oil",
+        "quinoa"
+      ],
+      "scores": {
+        "precision": 0.43645879404393334,
+        "recall": 0.7142857142857143,
+        "f1": 0.5418340547416198
+      },
+      "raw_response": "[\"quinoa\", \"red pepper\", \"onion\", \"eggplant\", \"zucchini\", \"yellow squash\"]"
+    },
+    {
+      "dish_id": "dish_1566850099",
+      "camera": "overhead",
+      "predicted": [
+        "broccoli",
+        "lettuce",
+        "carrot",
+        "almonds"
+      ],
+      "ground_truth": [
+        "onions",
+        "cucumbers",
+        "olive oil",
+        "salt",
+        "mixed greens",
+        "lettuce",
+        "lime",
+        "cherry tomatoes",
+        "pepper",
+        "vinegar"
+      ],
+      "scores": {
+        "precision": 0.5726675285498815,
+        "recall": 0.4360480566904716,
+        "f1": 0.4951059874710092
+      },
+      "raw_response": "[\"broccoli\", \"lettuce\", \"carrot\", \"almonds\"]"
+    },
+    {
+      "dish_id": "dish_1558635618",
+      "camera": "overhead",
+      "predicted": [
+        "corn",
+        "rice",
+        "cauliflower",
+        "apple"
+      ],
+      "ground_truth": [
+        "corn on the cob",
+        "apple",
+        "white rice",
+        "cauliflower"
+      ],
+      "scores": {
+        "precision": 0.8552631578947368,
+        "recall": 0.8552631578947368,
+        "f1": 0.8552631578947367
+      },
+      "raw_response": "[\"corn\", \"rice\", \"cauliflower\", \"apple\"]"
+    },
+    {
+      "dish_id": "dish_1560801041",
+      "camera": "overhead",
+      "predicted": [
+        "cauliflower",
+        "rice",
+        "greens",
+        "beet",
+        "chicken",
+        "shrimp"
+      ],
+      "ground_truth": [
+        "pork",
+        "zucchini",
+        "arugula",
+        "chicken breast",
+        "cherry tomatoes",
+        "rosemary",
+        "lemon juice",
+        "thyme",
+        "olive oil",
+        "onions",
+        "wheat berry",
+        "parmesan cheese",
+        "pepper",
+        "spinach (raw)",
+        "cauliflower",
+        "garlic",
+        "chickpeas",
+        "white rice",
+        "salt",
+        "bulgur",
+        "parsley",
+        "kale"
+      ],
+      "scores": {
+        "precision": 0.6968253968253969,
+        "recall": 0.467351559689021,
+        "f1": 0.5594723967262051
+      },
+      "raw_response": "[\"cauliflower\", \"rice\", \"greens\", \"beet\", \"chicken\", \"shrimp\"]"
+    },
+    {
+      "dish_id": "dish_1565123816",
+      "camera": "overhead",
+      "predicted": [
+        "pizza",
+        "meat",
+        "green pepper"
+      ],
+      "ground_truth": [
+        "vinegar",
+        "millet",
+        "bok choy",
+        "beef",
+        "cheese pizza",
+        "salt",
+        "spinach (cooked)",
+        "shallots",
+        "onions",
+        "olive oil"
+      ],
+      "scores": {
+        "precision": 0.5071895424836601,
+        "recall": 0.3393213649096002,
+        "f1": 0.406610821716156
+      },
+      "raw_response": "[\"pizza\", \"meat\", \"green pepper\"]"
+    },
+    {
+      "dish_id": "dish_1560203400",
+      "camera": "overhead",
+      "predicted": [
+        "pizza",
+        "pepperoni",
+        "cheese"
+      ],
+      "ground_truth": [
+        "pepperoni pizza"
+      ],
+      "scores": {
+        "precision": 0.4801587301587302,
+        "recall": 0.75,
+        "f1": 0.5854838709677419
+      },
+      "raw_response": "[\"pizza\", \"pepperoni\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1564675380",
+      "camera": "overhead",
+      "predicted": [
+        "bacon"
+      ],
+      "ground_truth": [
+        "turkey bacon"
+      ],
+      "scores": {
+        "precision": 0.5882352941176471,
+        "recall": 0.5882352941176471,
+        "f1": 0.5882352941176471
+      },
+      "raw_response": "[\"bacon\"]"
+    },
+    {
+      "dish_id": "dish_1564773903",
+      "camera": "overhead",
+      "predicted": [
+        "pineapple",
+        "cherry tomato",
+        "broccoli",
+        "fish"
+      ],
+      "ground_truth": [
+        "cherry tomatoes",
+        "lentils",
+        "salmon",
+        "arugula",
+        "pineapple",
+        "parsley",
+        "kale",
+        "olive oil",
+        "shallots",
+        "pepper",
+        "pickles",
+        "salt",
+        "mayonnaise",
+        "lemon juice",
+        "broccoli",
+        "garlic",
+        "chive"
+      ],
+      "scores": {
+        "precision": 0.8409090909090909,
+        "recall": 0.49099034578000156,
+        "f1": 0.6199841128266507
+      },
+      "raw_response": "[\"pineapple\", \"cherry tomato\", \"broccoli\", \"fish\"]"
+    },
+    {
+      "dish_id": "dish_1560526472",
+      "camera": "overhead",
+      "predicted": [
+        "strawberry",
+        "blueberry",
+        "spinach",
+        "lettuce",
+        "beet"
+      ],
+      "ground_truth": [
+        "salt",
+        "carrot",
+        "tomatoes",
+        "olive oil",
+        "almonds",
+        "mustard",
+        "parsley",
+        "mustard greens",
+        "vinegar",
+        "blueberries",
+        "spinach (raw)",
+        "cucumbers",
+        "berries",
+        "garlic"
+      ],
+      "scores": {
+        "precision": 0.5832085561497327,
+        "recall": 0.42999365247264404,
+        "f1": 0.49501664145224056
+      },
+      "raw_response": "[\"strawberry\", \"blueberry\", \"spinach\", \"lettuce\", \"beet\"]"
+    },
+    {
+      "dish_id": "dish_1565123783",
+      "camera": "overhead",
+      "predicted": [
+        "pizza"
+      ],
+      "ground_truth": [
+        "cheese pizza"
+      ],
+      "scores": {
+        "precision": 0.5882352941176471,
+        "recall": 0.5882352941176471,
+        "f1": 0.5882352941176471
+      },
+      "raw_response": "[\"pizza\"]"
+    },
+    {
+      "dish_id": "dish_1559233445",
+      "camera": "overhead",
+      "predicted": [
+        "pineapple"
+      ],
+      "ground_truth": [
+        "pineapple"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"pineapple\"]"
+    },
+    {
+      "dish_id": "dish_1562774099",
+      "camera": "overhead",
+      "predicted": [
+        "lettuce",
+        "crouton"
+      ],
+      "ground_truth": [
+        "raspberries",
+        "vinaigrette",
+        "mixed greens",
+        "granola",
+        "blackberries"
+      ],
+      "scores": {
+        "precision": 0.36507936507936506,
+        "recall": 0.2957393483709273,
+        "f1": 0.3267714165312143
+      },
+      "raw_response": "[\"lettuce\", \"crouton\"]"
+    },
+    {
+      "dish_id": "dish_1560801020",
+      "camera": "overhead",
+      "predicted": [
+        "cauliflower",
+        "quinoa",
+        "spinach",
+        "chicken",
+        "lettuce",
+        "shrimp"
+      ],
+      "ground_truth": [
+        "cauliflower",
+        "garlic",
+        "spinach (raw)",
+        "parmesan cheese",
+        "wheat berry",
+        "chickpeas",
+        "pepper",
+        "chicken breast",
+        "cherry tomatoes",
+        "thyme",
+        "lemon juice",
+        "olive oil",
+        "parsley",
+        "kale",
+        "bulgur",
+        "salt"
+      ],
+      "scores": {
+        "precision": 0.668082788671024,
+        "recall": 0.49002139608757256,
+        "f1": 0.5653634018685361
+      },
+      "raw_response": "[\"cauliflower\", \"quinoa\", \"spinach\", \"chicken\", \"lettuce\", \"shrimp\"]"
+    },
+    {
+      "dish_id": "dish_1564428144",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "arugula",
+        "olives",
+        "onions"
+      ],
+      "ground_truth": [
+        "garlic",
+        "shallots",
+        "parsley",
+        "salt",
+        "mustard",
+        "pecans",
+        "thyme",
+        "olive oil",
+        "blueberries",
+        "arugula",
+        "vinegar",
+        "chard",
+        "lemon juice",
+        "quinoa"
+      ],
+      "scores": {
+        "precision": 0.6,
+        "recall": 0.42545689604513137,
+        "f1": 0.49787394986876937
+      },
+      "raw_response": "[\"chicken\", \"arugula\", \"olives\", \"onions\"]"
+    },
+    {
+      "dish_id": "dish_1565711570",
+      "camera": "overhead",
+      "predicted": [
+        "scrambled eggs",
+        "brussels sprouts",
+        "bacon",
+        "hash browns"
+      ],
+      "ground_truth": [
+        "salt",
+        "pepper",
+        "brussels sprouts",
+        "scrambled eggs",
+        "olive oil",
+        "hash browns",
+        "bacon"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 0.6952757387539996,
+        "f1": 0.8202509159542578
+      },
+      "raw_response": "[\"scrambled eggs\", \"brussels sprouts\", \"bacon\", \"hash browns\"]"
+    },
+    {
+      "dish_id": "dish_1561405332",
+      "camera": "overhead",
+      "predicted": [
+        "broccoli"
+      ],
+      "ground_truth": [
+        "broccoli"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"broccoli\"]"
+    },
+    {
+      "dish_id": "dish_1562774180",
+      "camera": "overhead",
+      "predicted": [
+        "spinach",
+        "strawberry",
+        "blueberry",
+        "melon",
+        "potato"
+      ],
+      "ground_truth": [
+        "cantaloupe",
+        "raspberries",
+        "blackberries",
+        "mixed greens",
+        "roasted potatoes",
+        "granola",
+        "vinaigrette",
+        "berries"
+      ],
+      "scores": {
+        "precision": 0.474917239623122,
+        "recall": 0.4446598132259897,
+        "f1": 0.45929073678890686
+      },
+      "raw_response": "[\"spinach\", \"strawberry\", \"blueberry\", \"melon\", \"potato\"]"
+    },
+    {
+      "dish_id": "dish_1563566909",
+      "camera": "overhead",
+      "predicted": [
+        "tofu",
+        "rice",
+        "carrots",
+        "green beans",
+        "chili",
+        "onion"
+      ],
+      "ground_truth": [
+        "wild rice"
+      ],
+      "scores": {
+        "precision": 0.25196886446886446,
+        "recall": 0.6153846153846154,
+        "f1": 0.35754226241477466
+      },
+      "raw_response": "[\"tofu\", \"rice\", \"carrots\", \"green beans\", \"chili\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1562168696",
+      "camera": "overhead",
+      "predicted": [
+        "strawberry",
+        "blueberry",
+        "lettuce",
+        "apple"
+      ],
+      "ground_truth": [
+        "raspberries",
+        "vinaigrette",
+        "berries",
+        "granola",
+        "blackberries",
+        "mixed greens",
+        "honeydew melons"
+      ],
+      "scores": {
+        "precision": 0.4905753968253968,
+        "recall": 0.4018542026060823,
+        "f1": 0.4418046757638246
+      },
+      "raw_response": "[\"strawberry\", \"blueberry\", \"lettuce\", \"apple\"]"
+    },
+    {
+      "dish_id": "dish_1563909507",
+      "camera": "overhead",
+      "predicted": [
+        "green beans",
+        "spinach",
+        "lemon zest"
+      ],
+      "ground_truth": [
+        "mustard",
+        "garlic",
+        "tomatoes",
+        "salt",
+        "cucumbers",
+        "olive oil",
+        "mustard greens",
+        "spinach (raw)",
+        "vinegar",
+        "green beans"
+      ],
+      "scores": {
+        "precision": 0.7253968253968254,
+        "recall": 0.47088646681835533,
+        "f1": 0.5710679909603237
+      },
+      "raw_response": "[\"green beans\", \"spinach\", \"lemon zest\"]"
+    },
+    {
+      "dish_id": "dish_1562618000",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "rice",
+        "broccoli",
+        "lettuce",
+        "arugula",
+        "walnut"
+      ],
+      "ground_truth": [
+        "vinegar",
+        "olive oil",
+        "garlic",
+        "mustard greens",
+        "pepper",
+        "salt",
+        "radishes",
+        "lemon juice",
+        "thyme",
+        "brown rice",
+        "parsley",
+        "basil",
+        "arugula",
+        "chicken thighs",
+        "chickpeas",
+        "broccoli"
+      ],
+      "scores": {
+        "precision": 0.7509259259259259,
+        "recall": 0.5424485032940916,
+        "f1": 0.6298851058140961
+      },
+      "raw_response": "[\"chicken\", \"rice\", \"broccoli\", \"lettuce\", \"arugula\", \"walnut\"]"
+    },
+    {
+      "dish_id": "dish_1558114209",
+      "camera": "overhead",
+      "predicted": [
+        "melon"
+      ],
+      "ground_truth": [
+        "cantaloupe"
+      ],
+      "scores": {
+        "precision": 0.26666666666666666,
+        "recall": 0.26666666666666666,
+        "f1": 0.26666666666666666
+      },
+      "raw_response": "[\"melon\"]"
+    },
+    {
+      "dish_id": "dish_1566589933",
+      "camera": "overhead",
+      "predicted": [
+        "tofu",
+        "lettuce",
+        "onion",
+        "carrot",
+        "pepper",
+        "cabbage"
+      ],
+      "ground_truth": [
+        "tofu"
+      ],
+      "scores": {
+        "precision": 0.29764309764309765,
+        "recall": 1.0,
+        "f1": 0.4587441619097042
+      },
+      "raw_response": "[\"tofu\", \"lettuce\", \"onion\", \"carrot\", \"pepper\", \"cabbage\"]"
+    },
+    {
+      "dish_id": "dish_1565898158",
+      "camera": "overhead",
+      "predicted": [
+        "fish",
+        "rice",
+        "green beans"
+      ],
+      "ground_truth": [
+        "cilantro",
+        "ginger",
+        "spinach (raw)",
+        "jalapenos",
+        "lemon juice",
+        "lime",
+        "salt",
+        "onions",
+        "shallots",
+        "garlic",
+        "salmon",
+        "green beans",
+        "brown rice",
+        "olive oil",
+        "chili"
+      ],
+      "scores": {
+        "precision": 0.6666666666666666,
+        "recall": 0.39869979120753113,
+        "f1": 0.498982972179151
+      },
+      "raw_response": "[\"fish\", \"rice\", \"green beans\"]"
+    },
+    {
+      "dish_id": "dish_1565898230",
+      "camera": "overhead",
+      "predicted": [
+        "fish",
+        "rice",
+        "spinach",
+        "green beans",
+        "tomatoes",
+        "quinoa",
+        "meat"
+      ],
+      "ground_truth": [
+        "garlic",
+        "bell peppers",
+        "beef",
+        "cherry tomatoes",
+        "brown rice",
+        "ginger",
+        "olive oil",
+        "vinegar",
+        "spinach (cooked)",
+        "lime",
+        "shallots",
+        "bok choy",
+        "salmon",
+        "millet",
+        "vinaigrette",
+        "jalapenos",
+        "spinach (raw)",
+        "green beans",
+        "feta cheese",
+        "cucumbers",
+        "lettuce",
+        "cilantro",
+        "lemon juice",
+        "onions",
+        "salt",
+        "chili",
+        "olives"
+      ],
+      "scores": {
+        "precision": 0.6367415193502151,
+        "recall": 0.45994362451602094,
+        "f1": 0.5340916742198472
+      },
+      "raw_response": "[\"fish\", \"rice\", \"spinach\", \"green beans\", \"tomatoes\", \"quinoa\", \"meat\"]"
+    },
+    {
+      "dish_id": "dish_1556575327",
+      "camera": "overhead",
+      "predicted": [
+        "brussels sprouts",
+        "olives",
+        "celery"
+      ],
+      "ground_truth": [
+        "celery",
+        "olives",
+        "brussels sprouts"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"brussels sprouts\", \"olives\", \"celery\"]"
+    },
+    {
+      "dish_id": "dish_1561663580",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "rice"
+      ],
+      "ground_truth": [
+        "chicken",
+        "chard",
+        "brown rice",
+        "salt",
+        "parsley",
+        "olive oil",
+        "rosemary",
+        "basil",
+        "lemon juice",
+        "chive",
+        "garlic",
+        "carrot"
+      ],
+      "scores": {
+        "precision": 0.8,
+        "recall": 0.41652606652606655,
+        "f1": 0.5478236141251039
+      },
+      "raw_response": "[\"chicken\", \"rice\"]"
+    },
+    {
+      "dish_id": "dish_1558376483",
+      "camera": "overhead",
+      "predicted": [
+        "sausage",
+        "almonds",
+        "grapes",
+        "watermelon"
+      ],
+      "ground_truth": [
+        "cantaloupe",
+        "almonds",
+        "grapes",
+        "sausage"
+      ],
+      "scores": {
+        "precision": 0.8676470588235294,
+        "recall": 0.85,
+        "f1": 0.8587328767123288
+      },
+      "raw_response": "[\"sausage\", \"almonds\", \"grapes\", \"watermelon\"]"
+    },
+    {
+      "dish_id": "dish_1561739160",
+      "camera": "overhead",
+      "predicted": [
+        "blackberry",
+        "raspberry"
+      ],
+      "ground_truth": [
+        "berries"
+      ],
+      "scores": {
+        "precision": 0.4852941176470588,
+        "recall": 0.5,
+        "f1": 0.4925373134328358
+      },
+      "raw_response": "[\"blackberry\", \"raspberry\"]"
+    },
+    {
+      "dish_id": "dish_1558549773",
+      "camera": "overhead",
+      "predicted": [
+        "spinach"
+      ],
+      "ground_truth": [
+        "spinach (raw)"
+      ],
+      "scores": {
+        "precision": 0.7,
+        "recall": 0.7,
+        "f1": 0.7
+      },
+      "raw_response": "[\"spinach\"]"
+    },
+    {
+      "dish_id": "dish_1561574394",
+      "camera": "overhead",
+      "predicted": [
+        "lettuce",
+        "blueberry",
+        "crouton",
+        "cheese"
+      ],
+      "ground_truth": [
+        "walnuts",
+        "caesar salad",
+        "mustard",
+        "olive oil",
+        "vinegar",
+        "blueberries",
+        "chard",
+        "arugula",
+        "pepper",
+        "salt"
+      ],
+      "scores": {
+        "precision": 0.46515151515151515,
+        "recall": 0.3617748917748918,
+        "f1": 0.4070014880244176
+      },
+      "raw_response": "[\"lettuce\", \"blueberry\", \"crouton\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1558461760",
+      "camera": "overhead",
+      "predicted": [
+        "tomato"
+      ],
+      "ground_truth": [
+        "cherry tomatoes"
+      ],
+      "scores": {
+        "precision": 0.5714285714285714,
+        "recall": 0.5714285714285714,
+        "f1": 0.5714285714285714
+      },
+      "raw_response": "[\"tomato\"]"
+    },
+    {
+      "dish_id": "dish_1563909469",
+      "camera": "overhead",
+      "predicted": [
+        "spinach",
+        "onion"
+      ],
+      "ground_truth": [
+        "tomatoes",
+        "spinach (raw)",
+        "vinegar",
+        "cucumbers",
+        "olive oil",
+        "mustard greens",
+        "mustard",
+        "garlic",
+        "salt"
+      ],
+      "scores": {
+        "precision": 0.5642857142857143,
+        "recall": 0.3485949235949236,
+        "f1": 0.4309591578452463
+      },
+      "raw_response": "[\"spinach\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1558376938",
+      "camera": "overhead",
+      "predicted": [
+        "tomato"
+      ],
+      "ground_truth": [
+        "grapes"
+      ],
+      "scores": {
+        "precision": 0.16666666666666666,
+        "recall": 0.16666666666666666,
+        "f1": 0.16666666666666666
+      },
+      "raw_response": "[\"tomato\"]"
+    },
+    {
+      "dish_id": "dish_1565986733",
+      "camera": "overhead",
+      "predicted": [
+        "fish",
+        "spinach",
+        "rice",
+        "pepper",
+        "lentils"
+      ],
+      "ground_truth": [
+        "white rice",
+        "mushroom",
+        "ground turkey",
+        "chard",
+        "celery",
+        "wheat berry",
+        "onions",
+        "olive oil",
+        "cream",
+        "chive",
+        "garlic",
+        "salt",
+        "shallots",
+        "carrot",
+        "cherry tomatoes",
+        "fish",
+        "eggs",
+        "thyme",
+        "kale",
+        "parsley",
+        "lemon juice"
+      ],
+      "scores": {
+        "precision": 0.6727272727272727,
+        "recall": 0.43806041453100275,
+        "f1": 0.5306057878344106
+      },
+      "raw_response": "[\"fish\", \"spinach\", \"rice\", \"pepper\", \"lentils\"]"
+    },
+    {
+      "dish_id": "dish_1558639555",
+      "camera": "overhead",
+      "predicted": [
+        "apple",
+        "corn",
+        "sweet potato",
+        "pear"
+      ],
+      "ground_truth": [
+        "cantaloupe",
+        "corn on the cob",
+        "carrot",
+        "apple"
+      ],
+      "scores": {
+        "precision": 0.5404483430799221,
+        "recall": 0.5552631578947369,
+        "f1": 0.5477555969625184
+      },
+      "raw_response": "[\"apple\", \"corn\", \"sweet potato\", \"pear\"]"
+    },
+    {
+      "dish_id": "dish_1563984242",
+      "camera": "overhead",
+      "predicted": [
+        "cheese",
+        "pineapple",
+        "watermelon",
+        "eggplant"
+      ],
+      "ground_truth": [
+        "sweet potato",
+        "egg whites",
+        "pineapple",
+        "olive oil",
+        "cantaloupe"
+      ],
+      "scores": {
+        "precision": 0.5548611111111111,
+        "recall": 0.519766081871345,
+        "f1": 0.5367405321367323
+      },
+      "raw_response": "[\"cheese\", \"pineapple\", \"watermelon\", \"eggplant\"]"
+    },
+    {
+      "dish_id": "dish_1559849097",
+      "camera": "overhead",
+      "predicted": [
+        "pear",
+        "cherry tomato",
+        "almond"
+      ],
+      "ground_truth": [
+        "almonds",
+        "pears",
+        "grapes"
+      ],
+      "scores": {
+        "precision": 0.7037037037037037,
+        "recall": 0.762962962962963,
+        "f1": 0.7321361765806209
+      },
+      "raw_response": "[\"pear\", \"cherry tomato\", \"almond\"]"
+    },
+    {
+      "dish_id": "dish_1563566965",
+      "camera": "overhead",
+      "predicted": [
+        "tofu",
+        "arugula",
+        "kale",
+        "carrots",
+        "beans",
+        "chickpeas",
+        "tomatoes"
+      ],
+      "ground_truth": [
+        "salt",
+        "parsley",
+        "wild rice",
+        "blueberries",
+        "olive oil",
+        "arugula",
+        "chard",
+        "mustard",
+        "pecans",
+        "vinegar",
+        "mustard greens",
+        "chickpeas",
+        "garlic",
+        "pepper"
+      ],
+      "scores": {
+        "precision": 0.6266233766233766,
+        "recall": 0.5041874791874792,
+        "f1": 0.5587771978597478
+      },
+      "raw_response": "[\"tofu\", \"arugula\", \"kale\", \"carrots\", \"beans\", \"chickpeas\", \"tomatoes\"]"
+    },
+    {
+      "dish_id": "dish_1566849895",
+      "camera": "overhead",
+      "predicted": [
+        "carrot"
+      ],
+      "ground_truth": [
+        "olives",
+        "carrot"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 0.5833333333333334,
+        "f1": 0.7368421052631579
+      },
+      "raw_response": "[\"carrot\"]"
+    },
+    {
+      "dish_id": "dish_1559157919",
+      "camera": "overhead",
+      "predicted": [
+        "arugula",
+        "spinach",
+        "blueberries",
+        "walnut"
+      ],
+      "ground_truth": [
+        "pepper",
+        "spinach (raw)",
+        "arugula",
+        "blueberries",
+        "vinegar",
+        "chard",
+        "mustard",
+        "olive oil",
+        "walnuts",
+        "salt"
+      ],
+      "scores": {
+        "precision": 0.925,
+        "recall": 0.6022538246067658,
+        "f1": 0.7295248226400027
+      },
+      "raw_response": "[\"arugula\", \"spinach\", \"blueberries\", \"walnut\"]"
+    },
+    {
+      "dish_id": "dish_1558113477",
+      "camera": "overhead",
+      "predicted": [
+        "almonds"
+      ],
+      "ground_truth": [
+        "almonds"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"almonds\"]"
+    },
+    {
+      "dish_id": "dish_1559238993",
+      "camera": "overhead",
+      "predicted": [
+        "strawberry",
+        "blueberry"
+      ],
+      "ground_truth": [
+        "berries"
+      ],
+      "scores": {
+        "precision": 0.4852941176470588,
+        "recall": 0.5,
+        "f1": 0.4925373134328358
+      },
+      "raw_response": "[\"strawberry\", \"blueberry\"]"
+    },
+    {
+      "dish_id": "dish_1562788506",
+      "camera": "overhead",
+      "predicted": [
+        "corn"
+      ],
+      "ground_truth": [
+        "corn on the cob"
+      ],
+      "scores": {
+        "precision": 0.42105263157894735,
+        "recall": 0.42105263157894735,
+        "f1": 0.42105263157894735
+      },
+      "raw_response": "[\"corn\"]"
+    },
+    {
+      "dish_id": "dish_1562774129",
+      "camera": "overhead",
+      "predicted": [
+        "strawberry",
+        "blueberry",
+        "spinach"
+      ],
+      "ground_truth": [
+        "berries",
+        "vinaigrette",
+        "granola",
+        "blackberries",
+        "mixed greens",
+        "raspberries"
+      ],
+      "scores": {
+        "precision": 0.49206349206349204,
+        "recall": 0.41207184628237253,
+        "f1": 0.4485291151957818
+      },
+      "raw_response": "[\"strawberry\", \"blueberry\", \"spinach\"]"
+    },
+    {
+      "dish_id": "dish_1559578551",
+      "camera": "overhead",
+      "predicted": [
+        "bacon"
+      ],
+      "ground_truth": [
+        "bacon"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"bacon\"]"
+    },
+    {
+      "dish_id": "dish_1559233756",
+      "camera": "overhead",
+      "predicted": [
+        "strawberry",
+        "pineapple",
+        "potato",
+        "bacon"
+      ],
+      "ground_truth": [
+        "strawberries",
+        "bacon",
+        "sweet potato",
+        "pineapple"
+      ],
+      "scores": {
+        "precision": 0.8712121212121212,
+        "recall": 0.8712121212121212,
+        "f1": 0.8712121212121212
+      },
+      "raw_response": "[\"strawberry\", \"pineapple\", \"potato\", \"bacon\"]"
+    },
+    {
+      "dish_id": "dish_1565118729",
+      "camera": "overhead",
+      "predicted": [
+        "meat",
+        "greens",
+        "onion"
+      ],
+      "ground_truth": [
+        "shallots",
+        "salt",
+        "kale",
+        "onions",
+        "olive oil",
+        "chard",
+        "vinegar",
+        "beef",
+        "spinach (cooked)",
+        "millet",
+        "bok choy"
+      ],
+      "scores": {
+        "precision": 0.6363636363636364,
+        "recall": 0.4095475231838868,
+        "f1": 0.4983619282344544
+      },
+      "raw_response": "[\"meat\", \"greens\", \"onion\"]"
+    },
+    {
+      "dish_id": "dish_1568305225",
+      "camera": "overhead",
+      "predicted": [
+        "sausage",
+        "spinach",
+        "carrot"
+      ],
+      "ground_truth": [
+        "bell peppers",
+        "garlic",
+        "salt",
+        "cucumbers",
+        "mustard",
+        "olive oil",
+        "vinegar",
+        "turkey bacon",
+        "radishes"
+      ],
+      "scores": {
+        "precision": 0.41904761904761906,
+        "recall": 0.30264550264550266,
+        "f1": 0.35145929339477733
+      },
+      "raw_response": "[\"sausage\", \"spinach\", \"carrot\"]"
+    },
+    {
+      "dish_id": "dish_1566414291",
+      "camera": "overhead",
+      "predicted": [
+        "potato",
+        "quinoa",
+        "red pepper",
+        "onion",
+        "cucumber",
+        "parsley"
+      ],
+      "ground_truth": [
+        "olive oil",
+        "roasted potatoes",
+        "quinoa"
+      ],
+      "scores": {
+        "precision": 0.473215190606495,
+        "recall": 0.658008658008658,
+        "f1": 0.5505182602037304
+      },
+      "raw_response": "[\"potato\", \"quinoa\", \"red pepper\", \"onion\", \"cucumber\", \"parsley\"]"
+    },
+    {
+      "dish_id": "dish_1561661347",
+      "camera": "overhead",
+      "predicted": [
+        "lettuce",
+        "asparagus",
+        "parmesan cheese"
+      ],
+      "ground_truth": [
+        "green beans",
+        "caesar salad"
+      ],
+      "scores": {
+        "precision": 0.3866503866503866,
+        "recall": 0.46886446886446886,
+        "f1": 0.4238070841305855
+      },
+      "raw_response": "[\"lettuce\", \"asparagus\", \"parmesan cheese\"]"
+    },
+    {
+      "dish_id": "dish_1566501575",
+      "camera": "overhead",
+      "predicted": [
+        "tuna",
+        "tomato",
+        "carrot",
+        "almond"
+      ],
+      "ground_truth": [
+        "brownies"
+      ],
+      "scores": {
+        "precision": 0.22023809523809523,
+        "recall": 0.2857142857142857,
+        "f1": 0.24873949579831933
+      },
+      "raw_response": "[\"tuna\", \"tomato\", \"carrot\", \"almond\"]"
+    },
+    {
+      "dish_id": "dish_1563218408",
+      "camera": "overhead",
+      "predicted": [
+        "pizza",
+        "pepperoni",
+        "cheese"
+      ],
+      "ground_truth": [
+        "pepperoni pizza"
+      ],
+      "scores": {
+        "precision": 0.4801587301587302,
+        "recall": 0.75,
+        "f1": 0.5854838709677419
+      },
+      "raw_response": "[\"pizza\", \"pepperoni\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1561661377",
+      "camera": "overhead",
+      "predicted": [
+        "fish",
+        "quinoa",
+        "asparagus",
+        "lettuce",
+        "kale"
+      ],
+      "ground_truth": [
+        "garlic",
+        "chard",
+        "brown rice",
+        "green beans",
+        "chicken",
+        "salt",
+        "carrot",
+        "caesar salad",
+        "parsley",
+        "chive",
+        "rosemary",
+        "basil",
+        "lemon juice",
+        "olive oil"
+      ],
+      "scores": {
+        "precision": 0.43174048174048174,
+        "recall": 0.383351662343259,
+        "f1": 0.4061097449593114
+      },
+      "raw_response": "[\"fish\", \"quinoa\", \"asparagus\", \"lettuce\", \"kale\"]"
+    },
+    {
+      "dish_id": "dish_1566849862",
+      "camera": "overhead",
+      "predicted": [
+        "beans"
+      ],
+      "ground_truth": [
+        "olives"
+      ],
+      "scores": {
+        "precision": 0.36363636363636365,
+        "recall": 0.36363636363636365,
+        "f1": 0.36363636363636365
+      },
+      "raw_response": "[\"beans\"]"
+    },
+    {
+      "dish_id": "dish_1566502573",
+      "camera": "overhead",
+      "predicted": [
+        "spinach",
+        "chickpeas",
+        "corn",
+        "quinoa",
+        "tomato",
+        "onion",
+        "chicken"
+      ],
+      "ground_truth": [
+        "chive",
+        "bok choy",
+        "chicken",
+        "white rice",
+        "pork",
+        "arugula",
+        "spinach (raw)",
+        "brown rice",
+        "chard",
+        "mustard",
+        "olive oil",
+        "garlic",
+        "cucumbers",
+        "sugar",
+        "rosemary",
+        "pepper",
+        "sun dried tomatoes",
+        "lemon juice",
+        "mustard greens",
+        "parsley",
+        "vinegar",
+        "corn on the cob",
+        "basil",
+        "onions",
+        "carrot",
+        "soy sauce",
+        "salt",
+        "chickpeas"
+      ],
+      "scores": {
+        "precision": 0.7243756243756244,
+        "recall": 0.46936562473106036,
+        "f1": 0.5696326866973017
+      },
+      "raw_response": "[\"spinach\", \"chickpeas\", \"corn\", \"quinoa\", \"tomato\", \"onion\", \"chicken\"]"
+    },
+    {
+      "dish_id": "dish_1564675411",
+      "camera": "overhead",
+      "predicted": [
+        "mashed potatoes",
+        "bacon",
+        "gravy"
+      ],
+      "ground_truth": [
+        "egg whites",
+        "turkey bacon"
+      ],
+      "scores": {
+        "precision": 0.407843137254902,
+        "recall": 0.49411764705882355,
+        "f1": 0.4468542199488491
+      },
+      "raw_response": "[\"mashed potatoes\", \"bacon\", \"gravy\"]"
+    },
+    {
+      "dish_id": "dish_1560203424",
+      "camera": "overhead",
+      "predicted": [
+        "pizza",
+        "pepperoni",
+        "cheese",
+        "brownie"
+      ],
+      "ground_truth": [
+        "pepperoni pizza",
+        "brownies"
+      ],
+      "scores": {
+        "precision": 0.6172619047619048,
+        "recall": 0.8416666666666667,
+        "f1": 0.7122059023527813
+      },
+      "raw_response": "[\"pizza\", \"pepperoni\", \"cheese\", \"brownie\"]"
+    },
+    {
+      "dish_id": "dish_1558030289",
+      "camera": "overhead",
+      "predicted": [
+        "melon"
+      ],
+      "ground_truth": [
+        "honeydew melons"
+      ],
+      "scores": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5
+      },
+      "raw_response": "[\"melon\"]"
+    },
+    {
+      "dish_id": "dish_1560444985",
+      "camera": "overhead",
+      "predicted": [
+        "scrambled eggs",
+        "pineapple",
+        "watermelon",
+        "cucumber",
+        "carrots",
+        "green pepper",
+        "sweet potato"
+      ],
+      "ground_truth": [
+        "honeydew melons",
+        "pineapple",
+        "radishes",
+        "bok choy",
+        "vinegar",
+        "watermelon",
+        "yam",
+        "mustard",
+        "olive oil",
+        "cucumbers",
+        "garlic",
+        "bell peppers",
+        "salt",
+        "scrambled eggs"
+      ],
+      "scores": {
+        "precision": 0.8546918767507002,
+        "recall": 0.6220127189631833,
+        "f1": 0.7200210789300664
+      },
+      "raw_response": "[\"scrambled eggs\", \"pineapple\", \"watermelon\", \"cucumber\", \"carrots\", \"green pepper\", \"sweet potato\"]"
+    },
+    {
+      "dish_id": "dish_1563984140",
+      "camera": "overhead",
+      "predicted": [
+        "cheese"
+      ],
+      "ground_truth": [
+        "egg whites"
+      ],
+      "scores": {
+        "precision": 0.375,
+        "recall": 0.375,
+        "f1": 0.375
+      },
+      "raw_response": "[\"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1561662160",
+      "camera": "overhead",
+      "predicted": [
+        "lettuce",
+        "tomato",
+        "sesame seeds",
+        "cucumber"
+      ],
+      "ground_truth": [
+        "lemon juice",
+        "olive oil",
+        "onions",
+        "mixed greens",
+        "salt",
+        "apple",
+        "millet",
+        "parsley",
+        "vinegar"
+      ],
+      "scores": {
+        "precision": 0.44283625730994153,
+        "recall": 0.38143149897535866,
+        "f1": 0.409846669697714
+      },
+      "raw_response": "[\"lettuce\", \"tomato\", \"sesame seeds\", \"cucumber\"]"
+    },
+    {
+      "dish_id": "dish_1562703408",
+      "camera": "overhead",
+      "predicted": [
+        "pizza",
+        "meat",
+        "berries"
+      ],
+      "ground_truth": [
+        "onions",
+        "spinach (cooked)",
+        "shallots",
+        "berries",
+        "salt",
+        "pizza",
+        "olive oil",
+        "vinegar",
+        "bok choy",
+        "millet",
+        "beef"
+      ],
+      "scores": {
+        "precision": 0.8666666666666667,
+        "recall": 0.48356037901492444,
+        "f1": 0.6207632459345105
+      },
+      "raw_response": "[\"pizza\", \"meat\", \"berries\"]"
+    },
+    {
+      "dish_id": "dish_1564427455",
+      "camera": "overhead",
+      "predicted": [
+        "tomatoes",
+        "olives",
+        "cheese"
+      ],
+      "ground_truth": [
+        "grilled chicken",
+        "olives",
+        "cherry tomatoes"
+      ],
+      "scores": {
+        "precision": 0.7239475500345066,
+        "recall": 0.660455486542443,
+        "f1": 0.6907455686769918
+      },
+      "raw_response": "[\"tomatoes\", \"olives\", \"cheese\"]"
+    },
+    {
+      "dish_id": "dish_1563389600",
+      "camera": "overhead",
+      "predicted": [
+        "tomatoes",
+        "chicken breast"
+      ],
+      "ground_truth": [
+        "grilled chicken",
+        "cherry tomatoes"
+      ],
+      "scores": {
+        "precision": 0.8478260869565217,
+        "recall": 0.8478260869565217,
+        "f1": 0.8478260869565218
+      },
+      "raw_response": "[\"tomatoes\", \"chicken breast\"]"
+    },
+    {
+      "dish_id": "dish_1562776465",
+      "camera": "overhead",
+      "predicted": [
+        "brussels sprouts",
+        "potatoes"
+      ],
+      "ground_truth": [
+        "salt",
+        "pepper",
+        "sweet potato",
+        "olive oil",
+        "brussels sprouts"
+      ],
+      "scores": {
+        "precision": 0.8,
+        "recall": 0.4918095238095238,
+        "f1": 0.6091418460631082
+      },
+      "raw_response": "[\"brussels sprouts\", \"potatoes\"]"
+    },
+    {
+      "dish_id": "dish_1557937574",
+      "camera": "overhead",
+      "predicted": [
+        "blackberries"
+      ],
+      "ground_truth": [
+        "blackberries"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"blackberries\"]"
+    },
+    {
+      "dish_id": "dish_1562700496",
+      "camera": "overhead",
+      "predicted": [
+        "cauliflower"
+      ],
+      "ground_truth": [
+        "cauliflower"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"cauliflower\"]"
+    },
+    {
+      "dish_id": "dish_1566328745",
+      "camera": "overhead",
+      "predicted": [
+        "chicken",
+        "tomato"
+      ],
+      "ground_truth": [
+        "chicken",
+        "cherry tomatoes"
+      ],
+      "scores": {
+        "precision": 0.7857142857142857,
+        "recall": 0.7857142857142857,
+        "f1": 0.7857142857142857
+      },
+      "raw_response": "[\"chicken\", \"tomato\"]"
+    },
+    {
+      "dish_id": "dish_1558544663",
+      "camera": "overhead",
+      "predicted": [
+        "oats"
+      ],
+      "ground_truth": [
+        "oatmeal"
+      ],
+      "scores": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "raw_response": "[\"oats\"]"
+    },
+    {
+      "dish_id": "dish_1563909580",
+      "camera": "overhead",
+      "predicted": [
+        "green beans",
+        "spinach",
+        "yellow rice",
+        "flatbread"
+      ],
+      "ground_truth": [
+        "mustard greens",
+        "cucumbers",
+        "tomatoes",
+        "salt",
+        "mustard",
+        "garlic",
+        "fried rice",
+        "cheese pizza",
+        "vinegar",
+        "spinach (raw)",
+        "green beans",
+        "olive oil"
+      ],
+      "scores": {
+        "precision": 0.6731203007518797,
+        "recall": 0.4704642790130406,
+        "f1": 0.553835829173863
+      },
+      "raw_response": "[\"green beans\", \"spinach\", \"yellow rice\", \"flatbread\"]"
+    },
+    {
+      "dish_id": "dish_1563565289",
+      "camera": "overhead",
+      "predicted": [
+        "corn"
+      ],
+      "ground_truth": [
+        "corn on the cob"
+      ],
+      "scores": {
+        "precision": 0.42105263157894735,
+        "recall": 0.42105263157894735,
+        "f1": 0.42105263157894735
+      },
+      "raw_response": "[\"corn\"]"
+    },
+    {
+      "dish_id": "dish_1563565354",
+      "camera": "overhead",
+      "predicted": [
+        "fish",
+        "corn",
+        "lettuce"
+      ],
+      "ground_truth": [
+        "shallots",
+        "fish",
+        "corn on the cob",
+        "mushroom",
+        "ground turkey",
+        "cream",
+        "olive oil",
+        "thyme",
+        "onions",
+        "lemon juice",
+        "salt",
+        "parsley",
+        "carrot",
+        "white rice",
+        "cherry tomatoes",
+        "eggs",
+        "chard",
+        "wheat berry",
+        "kale",
+        "celery",
+        "chive",
+        "garlic"
+      ],
+      "scores": {
+        "precision": 0.6666666666666666,
+        "recall": 0.3895191183398332,
+        "f1": 0.4917305570912552
+      },
+      "raw_response": "[\"fish\", \"corn\", \"lettuce\"]"
+    }
+  ]
+}
