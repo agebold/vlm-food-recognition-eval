@@ -29,7 +29,7 @@ Full 507-dish evaluation on the Nutrition5k overhead test split — **10 vision 
 - **Zero-Correct** — % of dishes where the model got nothing right.
 - **All-Correct** — % of dishes where *every* ingredient the model named was real.
 
-### Interpretation
+### Key findings
 
 **Kimi K2.5 leads, and the disciplined models win generally.** Kimi tops F1 (0.682), precision (0.733), and prediction accuracy (85.1%) while naming only 3.6 ingredients per dish. The next tier — Maverick, Scout, Qwen3-VL — all sit at 83–84% accuracy with ~3 predictions/dish. High accuracy comes from naming what you can actually see, not from guessing more.
 
@@ -50,9 +50,9 @@ At 10–40× cheaper with *higher* prediction accuracy, the open/third-party Bed
 
 ---
 
-## Recall
+## Recall understates visual performance on this dataset
 
-The PMC13092701 paper reports recall, and we implement it faithfully — but treating it as a real performance signal is wrong.
+**Recall is the wrong yardstick here.** We implement the PMC13092701 paper's recall metric faithfully, but on Nutrition5k it penalizes models for failing to name ingredients that are physically impossible to see — so a perfect visual reading still scores poorly.
 
 Nutrition5k's ground truth includes ingredients that are **physically invisible in overhead photos**:
 
