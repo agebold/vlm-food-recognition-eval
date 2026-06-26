@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fig 4 – Hallucinations</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:#F0F4F8;
+  padding:48px 44px;
+  color:#111827;
+}
+svg{
+  display:block;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 2px 6px rgba(0,0,0,.07),0 12px 32px rgba(0,0,0,.07);
+}
+text{font-family:'Inter',system-ui,sans-serif}
+.ttl{font:800 18px/1.3 'Inter',sans-serif;fill:#111827}
+.sub{font:500 13px/1.5 'Inter',sans-serif;fill:#1F2937}
+.axl{font:600 11px/1   'Inter',sans-serif;fill:#374151}
+</style>
+</head>
+<body><script>
+
+const panels = [{"model": "Kimi K2.5", "color": "#1D4ED8", "items": [{"ing": "lettuce", "count": 36}, {"ing": "tomato sauce", "count": 18}, {"ing": "carrots", "count": 17}, {"ing": "croutons", "count": 14}, {"ing": "cheese", "count": 10}, {"ing": "spinach", "count": 10}, {"ing": "tofu", "count": 9}, {"ing": "beef", "count": 7}, {"ing": "chicken", "count": 7}, {"ing": "rice", "count": 5}]}, {"model": "Claude Opus 4.8", "color": "#7C3AED", "items": [{"ing": "lettuce", "count": 40}, {"ing": "tomato sauce", "count": 27}, {"ing": "carrots", "count": 19}, {"ing": "spinach", "count": 19}, {"ing": "cherry tomatoes", "count": 13}, {"ing": "cheese", "count": 12}, {"ing": "croutons", "count": 11}, {"ing": "chicken", "count": 10}, {"ing": "salad dressing", "count": 9}, {"ing": "tofu", "count": 8}]}, {"model": "Llama4 Maverick", "color": "#047857", "items": [{"ing": "lettuce", "count": 19}, {"ing": "spinach", "count": 11}, {"ing": "tofu", "count": 11}, {"ing": "carrots", "count": 8}, {"ing": "greens", "count": 8}, {"ing": "apple", "count": 7}, {"ing": "fish", "count": 6}, {"ing": "mozzarella", "count": 6}, {"ing": "rice", "count": 6}, {"ing": "chicken", "count": 6}]}, {"model": "Llama4 Scout", "color": "#B45309", "items": [{"ing": "lettuce", "count": 17}, {"ing": "carrots", "count": 16}, {"ing": "spinach", "count": 12}, {"ing": "cheese", "count": 10}, {"ing": "chicken", "count": 9}, {"ing": "onion", "count": 8}, {"ing": "tomato sauce", "count": 7}, {"ing": "tomato", "count": 6}, {"ing": "apple", "count": 6}, {"ing": "sweet potatoes", "count": 6}]}, {"model": "Nova Pro", "color": "#B91C1C", "items": [{"ing": "\"quinoa\"", "count": 31}, {"ing": "lettuce", "count": 25}, {"ing": "spinach", "count": 23}, {"ing": "cheese", "count": 16}, {"ing": "egg", "count": 15}, {"ing": "tofu", "count": 12}, {"ing": "carrots", "count": 12}, {"ing": "chicken", "count": 12}, {"ing": "apple", "count": 8}, {"ing": "dough", "count": 7}]}, {"model": "Nova Lite", "color": "#0369A1", "items": [{"ing": "spinach", "count": 26}, {"ing": "lettuce", "count": 22}, {"ing": "carrots", "count": 17}, {"ing": "tofu", "count": 13}, {"ing": "apple", "count": 8}, {"ing": "croutons", "count": 8}, {"ing": "chicken", "count": 7}, {"ing": "cheese", "count": 7}, {"ing": "quinoa", "count": 7}, {"ing": "onion", "count": 6}]}];
+const COLS=3, CW=270, CH=220, GAP=24;
+const pm={t:42,r:16,b:36,l:122};
+const TW=COLS*(CW+pm.l+pm.r)+(COLS-1)*GAP;
+const ROWS=Math.ceil(panels.length/COLS);
+const TH=80+ROWS*(CH+pm.t+pm.b)+(ROWS-1)*GAP;
+
+const svg=d3.select("body").append("svg").attr("width",TW).attr("height",TH);
+svg.append("text").attr("class","ttl").attr("x",32).attr("y",34)
+  .text("What each model hallucinates — predicted but not in the dish");
+svg.append("text").attr("class","sub").attr("x",32).attr("y",56)
+  .text("Top 10 ingredients predicted when ground truth says they were absent");
+
+panels.forEach((m,i)=>{
+  const col=i%COLS, row=Math.floor(i/COLS);
+  const ox=col*(CW+pm.l+pm.r+GAP)+pm.l;
+  const oy=70+row*(CH+pm.t+pm.b+GAP)+pm.t;
+  const g=svg.append("g").attr("transform",`translate(${ox},${oy})`);
+
+  const maxC=d3.max(m.items,d=>d.count)||1;
+  const x=d3.scaleLinear().domain([0,maxC*1.1]).range([0,CW]).nice();
+  const y=d3.scaleBand().domain(m.items.map(d=>d.ing)).range([0,CH]).padding(0.28);
+
+  x.ticks(4).forEach(v=>{
+    g.append("line").attr("x1",x(v)).attr("x2",x(v)).attr("y1",0).attr("y2",CH)
+     .attr("stroke","#F3F4F6").attr("stroke-width",1);
+  });
+
+  // Bars — full model color
+  g.selectAll("rect").data(m.items).join("rect")
+    .attr("x",0).attr("y",d=>y(d.ing))
+    .attr("width",d=>x(d.count)).attr("height",y.bandwidth())
+    .attr("fill",m.color).attr("rx",3);
+
+  // Count labels
+  g.selectAll(".lbl").data(m.items).join("text")
+    .attr("x",d=>x(d.count)+5).attr("y",d=>y(d.ing)+y.bandwidth()/2).attr("dy","0.35em")
+    .attr("font-size",10).attr("font-weight","600").attr("fill","#374151")
+    .text(d=>d.count);
+
+  // Panel title
+  g.append("text").attr("x",0).attr("y",-20)
+   .attr("font-size",12).attr("font-weight","800").attr("fill",m.color).text(m.model);
+
+  const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(8));
+  yAx.select(".domain").remove();
+  yAx.selectAll("text").attr("font-size",9.5).attr("fill","#374151").attr("font-weight","500");
+
+  const xAx=g.append("g").attr("transform",`translate(0,${CH})`).call(d3.axisBottom(x).ticks(4));
+  xAx.select(".domain").attr("stroke","#9CA3AF");
+  xAx.selectAll("text").attr("font-size",9).attr("font-weight","600").attr("fill","#111827");
+  xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
+});
+
+</script></body>
+</html>

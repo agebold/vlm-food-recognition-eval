@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fig 1 – Accuracy</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:#F0F4F8;
+  padding:48px 44px;
+  color:#111827;
+}
+svg{
+  display:block;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 2px 6px rgba(0,0,0,.07),0 12px 32px rgba(0,0,0,.07);
+}
+text{font-family:'Inter',system-ui,sans-serif}
+.ttl{font:800 18px/1.3 'Inter',sans-serif;fill:#111827}
+.sub{font:500 13px/1.5 'Inter',sans-serif;fill:#1F2937}
+.axl{font:600 11px/1   'Inter',sans-serif;fill:#374151}
+</style>
+</head>
+<body><script>
+
+const data = [{"model": "Nova Pro", "color": "#B91C1C", "acc": 81.01}, {"model": "Nova Lite", "color": "#0369A1", "acc": 82.52}, {"model": "Claude Opus 4.8", "color": "#7C3AED", "acc": 82.72}, {"model": "Llama4 Scout", "color": "#B45309", "acc": 83.8}, {"model": "Llama4 Maverick", "color": "#047857", "acc": 84.19}, {"model": "Kimi K2.5", "color": "#1D4ED8", "acc": 85.15}];
+
+const W=560, rowH=64, H=data.length*rowH;
+const m={t:96,r:80,b:56,l:164};
+
+const svg = d3.select("body").append("svg")
+  .attr("width",W+m.l+m.r).attr("height",H+m.t+m.b);
+
+svg.append("text").attr("class","ttl").attr("x",m.l).attr("y",36)
+  .text("When a model names an ingredient, how often is it correct?");
+svg.append("text").attr("class","sub").attr("x",m.l).attr("y",60)
+  .text("Prediction accuracy = correct guesses ÷ total guesses · averaged across 507 dishes · sorted ascending");
+
+const g = svg.append("g").attr("transform",`translate(${m.l},${m.t})`);
+
+const x = d3.scaleLinear().domain([0,90]).range([0,W]);
+const y = d3.scaleBand().domain(data.map(d=>d.model)).range([0,H]).padding(0.35);
+
+// Light vertical grid only (20%, 40%, 60%, 80%)
+[20,40,60,80].forEach(v => {
+  g.append("line")
+   .attr("x1",x(v)).attr("x2",x(v)).attr("y1",0).attr("y2",H)
+   .attr("stroke","#E5E7EB").attr("stroke-width",1);
+});
+
+// Bars — full color, no opacity tricks
+g.selectAll(".bar").data(data).join("rect")
+  .attr("x",0).attr("y",d=>y(d.model))
+  .attr("width",d=>x(d.acc))
+  .attr("height",y.bandwidth())
+  .attr("fill",d=>d.color)
+  .attr("rx",4);
+
+// Percentage label at bar end — bold, matching color
+g.selectAll(".pct").data(data).join("text")
+  .attr("x",d=>x(d.acc)+10)
+  .attr("y",d=>y(d.model)+y.bandwidth()/2)
+  .attr("dy","0.35em")
+  .attr("font-size",14).attr("font-weight","800")
+  .attr("fill",d=>d.color)
+  .text(d=>d.acc.toFixed(1)+"%");
+
+// Y axis — model names, colored, no tick marks, no axis line
+const yAx = g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(12));
+yAx.select(".domain").remove();
+yAx.selectAll("text")
+  .attr("font-size",13).attr("font-weight","700")
+  .each(function(d) {
+    const row = data.find(r => r.model === d);
+    d3.select(this).attr("fill", row ? row.color : "#374151");
+  });
+
+// X axis — clean, 0 to 90%
+const xAx = g.append("g").attr("transform",`translate(0,${H})`).call(
+  d3.axisBottom(x).tickValues([0,20,40,60,80]).tickFormat(d=>d+"%").tickSize(5));
+xAx.select(".domain").attr("stroke","#9CA3AF");
+xAx.selectAll("text").attr("font-size",11).attr("fill","#111827");
+xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
+
+g.append("text").attr("class","axl")
+  .attr("x",W/2).attr("y",H+46).attr("text-anchor","middle")
+  .text("Prediction accuracy (%)");
+
+// Annotation: winner
+const best=data[data.length-1];
+g.append("text")
+  .attr("x",x(best.acc)+10)
+  .attr("y",y(best.model)+y.bandwidth()/2-22)
+  .attr("font-size",11).attr("font-weight","600")
+  .attr("fill",best.color).attr("font-style","italic")
+  .text("highest accuracy");
+
+</script></body>
+</html>

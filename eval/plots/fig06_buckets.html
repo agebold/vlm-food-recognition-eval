@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fig 6 – Accuracy Buckets</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:#F0F4F8;
+  padding:48px 44px;
+  color:#111827;
+}
+svg{
+  display:block;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 2px 6px rgba(0,0,0,.07),0 12px 32px rgba(0,0,0,.07);
+}
+text{font-family:'Inter',system-ui,sans-serif}
+.ttl{font:800 18px/1.3 'Inter',sans-serif;fill:#111827}
+.sub{font:500 13px/1.5 'Inter',sans-serif;fill:#1F2937}
+.axl{font:600 11px/1   'Inter',sans-serif;fill:#374151}
+</style>
+</head>
+<body><script>
+
+const data = [{"model": "Llama4 Maverick", "segs": [{"label": "Perfect (100%)", "count": 336, "pct": 66.4, "color": "#059669"}, {"label": "Good (75\u201399%)", "count": 53, "pct": 10.5, "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "count": 71, "pct": 14.0, "color": "#D97706"}, {"label": "Poor  (<50%)", "count": 46, "pct": 9.1, "color": "#DC2626"}], "perfect_pct": 66.4}, {"model": "Kimi K2.5", "segs": [{"label": "Perfect (100%)", "count": 333, "pct": 65.8, "color": "#059669"}, {"label": "Good (75\u201399%)", "count": 65, "pct": 12.8, "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "count": 63, "pct": 12.5, "color": "#D97706"}, {"label": "Poor  (<50%)", "count": 45, "pct": 8.9, "color": "#DC2626"}], "perfect_pct": 65.8}, {"model": "Nova Lite", "segs": [{"label": "Perfect (100%)", "count": 330, "pct": 65.2, "color": "#059669"}, {"label": "Good (75\u201399%)", "count": 54, "pct": 10.7, "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "count": 68, "pct": 13.4, "color": "#D97706"}, {"label": "Poor  (<50%)", "count": 54, "pct": 10.7, "color": "#DC2626"}], "perfect_pct": 65.2}, {"model": "Llama4 Scout", "segs": [{"label": "Perfect (100%)", "count": 328, "pct": 64.7, "color": "#059669"}, {"label": "Good (75\u201399%)", "count": 58, "pct": 11.4, "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "count": 77, "pct": 15.2, "color": "#D97706"}, {"label": "Poor  (<50%)", "count": 44, "pct": 8.7, "color": "#DC2626"}], "perfect_pct": 64.7}, {"model": "Nova Pro", "segs": [{"label": "Perfect (100%)", "count": 312, "pct": 61.5, "color": "#059669"}, {"label": "Good (75\u201399%)", "count": 58, "pct": 11.4, "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "count": 84, "pct": 16.6, "color": "#D97706"}, {"label": "Poor  (<50%)", "count": 53, "pct": 10.5, "color": "#DC2626"}], "perfect_pct": 61.5}, {"model": "Claude Opus 4.8", "segs": [{"label": "Perfect (100%)", "count": 294, "pct": 58.0, "color": "#059669"}, {"label": "Good (75\u201399%)", "count": 86, "pct": 17.0, "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "count": 80, "pct": 15.8, "color": "#D97706"}, {"label": "Poor  (<50%)", "count": 47, "pct": 9.3, "color": "#DC2626"}], "perfect_pct": 58.0}];
+const BUCKETS = [{"label": "Perfect (100%)", "color": "#059669"}, {"label": "Good (75\u201399%)", "color": "#1D4ED8"}, {"label": "Fair (50\u201374%)", "color": "#D97706"}, {"label": "Poor  (<50%)", "color": "#DC2626"}];
+
+const W=600, rowH=68, H=data.length*rowH;
+const m={t:130,r:44,b:56,l:162};
+
+const svg=d3.select("body").append("svg")
+  .attr("width",W+m.l+m.r).attr("height",H+m.t+m.b);
+
+// Title
+svg.append("text").attr("class","ttl").attr("x",m.l).attr("y",34)
+  .text("How many dishes did each model get right?");
+svg.append("text").attr("class","sub").attr("x",m.l).attr("y",58)
+  .text("507 dishes per model · each bar = 100% of dishes · sorted by perfect-accuracy dishes");
+
+// Legend — horizontal, clear colored squares
+BUCKETS.forEach((b,i)=>{
+  const lx=m.l+i*152;
+  svg.append("rect").attr("x",lx).attr("y",78).attr("width",16).attr("height",16)
+   .attr("fill",b.color).attr("rx",3);
+  svg.append("text").attr("x",lx+22).attr("y",90)
+   .attr("font-size",11).attr("font-weight","500").attr("fill","#374151")
+   .text(b.label);
+});
+
+const g=svg.append("g").attr("transform",`translate(${m.l},${m.t})`);
+
+const x=d3.scaleLinear().domain([0,100]).range([0,W]);
+const y=d3.scaleBand().domain(data.map(d=>d.model)).range([0,H]).padding(0.28);
+
+// For each model: stacked segments
+data.forEach(row=>{
+  let cumPct=0;
+  row.segs.forEach(seg=>{
+    const bx=x(cumPct), bw=x(seg.pct)-x(0);
+    const by=y(row.model), bh=y.bandwidth();
+
+    // Bar segment — solid color, no opacity
+    g.append("rect")
+     .attr("x",bx).attr("y",by).attr("width",bw).attr("height",bh)
+     .attr("fill",seg.color).attr("rx",seg===row.segs[0]?4:0);
+
+    // Percentage label inside bar if wide enough
+    if(seg.pct>=5){
+      g.append("text")
+       .attr("x",bx+bw/2).attr("y",by+bh/2).attr("dy","0.35em")
+       .attr("text-anchor","middle")
+       .attr("font-size",seg.pct>=12?13:10).attr("font-weight","800")
+       .attr("fill","#fff")
+       .text(seg.pct.toFixed(0)+"%");
+    }
+    cumPct+=seg.pct;
+  });
+
+  // Model name — left, bold, dark
+  g.append("text").attr("x",-12).attr("y",y(row.model)+y.bandwidth()/2).attr("dy","0.35em")
+   .attr("text-anchor","end").attr("font-size",12).attr("font-weight","700")
+   .attr("fill","#1F2937").text(row.model);
+});
+
+// X axis — % of dishes
+const xAx=g.append("g").attr("transform",`translate(0,${H})`).call(
+  d3.axisBottom(x).tickValues([0,25,50,75,100]).tickFormat(d=>d+"%").tickSize(5));
+xAx.select(".domain").attr("stroke","#9CA3AF");
+xAx.selectAll("text").attr("font-size",11).attr("font-weight","700").attr("fill","#111827");
+xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
+g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+46)
+  .attr("text-anchor","middle").text("Share of dishes (%)");
+
+// Subtle vertical guides
+[25,50,75].forEach(v=>{
+  g.append("line").attr("x1",x(v)).attr("x2",x(v)).attr("y1",0).attr("y2",H)
+   .attr("stroke","#fff").attr("stroke-width",1.5);
+});
+
+</script></body>
+</html>

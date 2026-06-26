@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fig 3 – Missed Ingredients</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:#F0F4F8;
+  padding:48px 44px;
+  color:#111827;
+}
+svg{
+  display:block;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 2px 6px rgba(0,0,0,.07),0 12px 32px rgba(0,0,0,.07);
+}
+text{font-family:'Inter',system-ui,sans-serif}
+.ttl{font:800 18px/1.3 'Inter',sans-serif;fill:#111827}
+.sub{font:500 13px/1.5 'Inter',sans-serif;fill:#1F2937}
+.axl{font:600 11px/1   'Inter',sans-serif;fill:#374151}
+</style>
+</head>
+<body><script>
+
+const data  = [{"ing": "olive oil", "count": 1044}, {"ing": "salt", "count": 737}, {"ing": "pepper", "count": 428}, {"ing": "garlic", "count": 406}, {"ing": "mustard", "count": 375}, {"ing": "vinegar", "count": 334}, {"ing": "arugula", "count": 245}, {"ing": "onions", "count": 234}, {"ing": "lemon juice", "count": 232}, {"ing": "shallots", "count": 217}, {"ing": "wheat berry", "count": 215}, {"ing": "parsley", "count": 201}, {"ing": "thyme", "count": 201}, {"ing": "mixed greens", "count": 197}, {"ing": "cucumbers", "count": 165}, {"ing": "basil", "count": 160}, {"ing": "chard", "count": 159}, {"ing": "rosemary", "count": 153}, {"ing": "jalapenos", "count": 127}, {"ing": "spinach (raw)", "count": 120}, {"ing": "mushroom", "count": 118}, {"ing": "bok choy", "count": 116}, {"ing": "pork", "count": 110}, {"ing": "carrot", "count": 106}, {"ing": "fish", "count": 101}];
+const INVIS = new Set(["olive oil", "flour", "ginger", "lemon juice", "thyme", "pepper", "vinegar", "cinnamon", "white wine", "garlic", "mustard", "cumin", "onions", "shallots", "rosemary", "salt", "basil", "paprika", "oregano"]);
+const W=520, rowH=28, H=data.length*rowH;
+const m={t:110,r:72,b:52,l:148};
+
+const svg=d3.select("body").append("svg")
+  .attr("width",W+m.l+m.r).attr("height",H+m.t+m.b);
+
+svg.append("text").attr("class","ttl").attr("x",m.l).attr("y",34)
+  .text("Top missed ingredients are physically invisible in photos");
+svg.append("text").attr("class","sub").attr("x",m.l).attr("y",58)
+  .text("Ground-truth ingredient present, but no model named it · 6 models × 507 dishes");
+
+// Legend — use actual solid colors
+[["#B91C1C","Invisible ingredient (dissolved oil, salt, spice)"],
+ ["#0369A1","Visible ingredient — model just missed it"]].forEach(([col,lbl],i)=>{
+  svg.append("rect").attr("x",m.l+i*290).attr("y",76).attr("width",14).attr("height",14)
+   .attr("fill",col).attr("rx",3);
+  svg.append("text").attr("x",m.l+i*290+20).attr("y",89)
+   .attr("font-size",11).attr("fill","#374151").text(lbl);
+});
+
+const g=svg.append("g").attr("transform",`translate(${m.l},${m.t})`);
+const x=d3.scaleLinear().domain([0,d3.max(data,d=>d.count)*1.05]).range([0,W]).nice();
+const y=d3.scaleBand().domain(data.map(d=>d.ing)).range([0,H]).padding(0.2);
+
+x.ticks(5).forEach(v=>{
+  g.append("line").attr("x1",x(v)).attr("x2",x(v)).attr("y1",0).attr("y2",H)
+   .attr("stroke","#F3F4F6").attr("stroke-width",1);
+});
+
+// Bars — full solid colors, no opacity
+g.selectAll("rect").data(data).join("rect")
+  .attr("x",0).attr("y",d=>y(d.ing))
+  .attr("width",d=>x(d.count)).attr("height",y.bandwidth())
+  .attr("fill",d=>INVIS.has(d.ing)?"#B91C1C":"#0369A1")
+  .attr("rx",3);
+
+// Count labels
+g.selectAll(".cnt").data(data).join("text")
+  .attr("x",d=>x(d.count)+6).attr("y",d=>y(d.ing)+y.bandwidth()/2).attr("dy","0.35em")
+  .attr("font-size",10).attr("font-weight","600").attr("fill","#374151")
+  .text(d=>d.count.toLocaleString());
+
+// Y axis
+const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
+yAx.select(".domain").remove();
+yAx.selectAll("text")
+  .attr("font-size",10.5)
+  .attr("font-weight","600")
+  .each(function(d){
+    d3.select(this).attr("fill", INVIS.has(d) ? "#B91C1C" : "#111827");
+  });
+
+// X axis
+const xAx=g.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(5));
+xAx.select(".domain").attr("stroke","#9CA3AF");
+xAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
+g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+42).attr("text-anchor","middle")
+  .text("total misses");
+
+// Callout annotation
+g.append("text")
+  .attr("x",x(data[0].count)+6).attr("y",y(data[0].ing)-7)
+  .attr("font-size",10).attr("font-style","italic").attr("font-weight","600").attr("fill","#B91C1C")
+  .text("877× — liquid absorbed into food, no visual trace");
+
+</script></body>
+</html>
