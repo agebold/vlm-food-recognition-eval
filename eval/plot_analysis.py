@@ -118,7 +118,7 @@ for idx, (name, color) in enumerate(zip(names, colors)):
     ax.axvline(med,  color="#111827", linestyle="--", linewidth=1.8, label=f"median {med:.0f}")
     ax.axvline(mean, color="#D97706", linestyle=":",  linewidth=1.5, label=f"mean {mean:.1f}")
     title = name + (f"  [{clipped} outlier>cap]" if clipped else "")
-    ax.set_title(title, fontsize=10, fontweight="bold", color=color, pad=6)
+    ax.set_title(title, fontsize=10, fontweight="bold", color="black", pad=6)
     ax.set_xlabel("Correct ingredients per dish", fontsize=9)
     ax.set_ylabel("Number of dishes", fontsize=9)
     ax.set_xlim(0, X_CAP + 1)
@@ -245,9 +245,7 @@ for bi, (ax, (lo, hi, label)) in enumerate(zip(axes, BUCK5)):
 
     ax.set_yticks(y_pos)
     if bi == 0:
-        ax.set_yticklabels(snames, fontsize=10, fontweight="bold")
-        for tick, col in zip(ax.get_yticklabels(), scolors):
-            tick.set_color(col)
+        ax.set_yticklabels(snames, fontsize=10, fontweight="bold", color="black")
     else:
         ax.set_yticklabels([])
     ax.set_xlim(x_lo, x_hi)
@@ -265,54 +263,53 @@ plt.close()
 print("Saved 05_f1_by_complexity.png")
 
 
-# ── Plot 6: Prediction accuracy buckets — stacked horizontal bars ─────────────
-#  Matches D3 fig06: Perfect / Good / Fair / Poor per model
-from matplotlib.patches import Patch
+# ── Plot 6: No-hallucination rate vs. complete-miss rate ──────────────────────
+#  Two bars per model:
+#    Green  — % of dishes where EVERY ingredient the model named was correct
+#             (prediction accuracy = 100% — model made zero wrong guesses)
+#    Red    — % of dishes where NONE of the model's guesses were correct
+#             (prediction accuracy = 0% — complete miss)
+#  Reading: longer green + shorter red = more reliable model.
 
-BUCK6 = [
-    ("Perfect (100%)",  100, 100, "#059669"),
-    ("Good (75–99%)",    75,  99, "#1D4ED8"),
-    ("Fair (50–74%)",    50,  74, "#D97706"),
-    ("Poor (<50%)",       0,  49, "#DC2626"),
-]
-
-model_rows = []
+model_rows6 = []
 for name in names:
     vals = [round(d["pred_acc"] * 100) for d in data[name]]
     total = len(vals)
-    segs = []
-    for label, lo, hi, col in BUCK6:
-        count = sum(1 for v in vals if lo <= v <= hi)
-        segs.append({"label": label, "pct": 100 * count / total, "color": col})
-    model_rows.append({"name": name, "segs": segs, "perfect": segs[0]["pct"]})
+    all_correct  = 100 * sum(1 for v in vals if v == 100) / total
+    zero_correct = 100 * sum(1 for v in vals if v == 0)   / total
+    model_rows6.append({"name": name, "all_correct": all_correct, "zero_correct": zero_correct})
 
-# Sort by Perfect descending
-model_rows.sort(key=lambda r: r["perfect"], reverse=True)
+model_rows6.sort(key=lambda r: r["all_correct"], reverse=True)
+y_pos = np.arange(len(model_rows6))
 
 fig, ax = plt.subplots(figsize=(10, 5))
-y_pos = np.arange(len(model_rows))
 
-for i, row in enumerate(model_rows):
-    left = 0.0
-    for seg in row["segs"]:
-        ax.barh(i, seg["pct"], left=left, color=seg["color"], height=0.65,
-                edgecolor="white", linewidth=0.5)
-        if seg["pct"] >= 5:
-            ax.text(left + seg["pct"] / 2, i, f"{seg['pct']:.0f}%",
-                    ha="center", va="center", fontsize=10, fontweight="bold", color="white")
-        left += seg["pct"]
+bar_h = 0.35
+# Green bars — all guesses correct
+ax.barh(y_pos + bar_h / 2, [r["all_correct"]  for r in model_rows6],
+        height=bar_h, color="#059669", label="No wrong guesses (100% accuracy)")
+# Red bars — zero guesses correct
+ax.barh(y_pos - bar_h / 2, [r["zero_correct"] for r in model_rows6],
+        height=bar_h, color="#DC2626", label="Zero correct  (0% accuracy)")
+
+# Value labels
+for i, r in enumerate(model_rows6):
+    ax.text(r["all_correct"]  + 0.5, i + bar_h / 2, f"{r['all_correct']:.1f}%",
+            va="center", fontsize=9, fontweight="bold", color="#059669")
+    ax.text(r["zero_correct"] + 0.5, i - bar_h / 2, f"{r['zero_correct']:.1f}%",
+            va="center", fontsize=9, fontweight="bold", color="#DC2626")
 
 ax.set_yticks(y_pos)
-ax.set_yticklabels([r["name"] for r in model_rows], fontsize=10, fontweight="bold")
-ax.set_xlabel("Share of dishes (%)", fontsize=10)
-ax.set_xlim(0, 100)
-ax.set_title("Per-dish prediction accuracy — what fraction of dishes did each model nail?",
-             fontsize=11, fontweight="bold", pad=12)
+ax.set_yticklabels([r["name"] for r in model_rows6], fontsize=10, fontweight="bold")
+ax.set_xlabel("Percentage of dishes (%)", fontsize=10)
+ax.set_xlim(0, 80)
+ax.set_title(
+    "Model reliability: dishes with zero wrong guesses (green) vs. zero right guesses (red)\n"
+    "Better model = longer green bar, shorter red bar",
+    fontsize=11, fontweight="bold", pad=10)
 ax.spines[["top", "right"]].set_visible(False)
-ax.grid(axis="x", alpha=0.2)
-
-legend_els = [Patch(facecolor=col, label=lbl) for lbl, _, _, col in BUCK6]
-ax.legend(handles=legend_els, loc="lower right", fontsize=9, framealpha=0.9)
+ax.grid(axis="x", alpha=0.25)
+ax.legend(fontsize=9, loc="lower right", framealpha=0.9)
 
 fig.tight_layout()
 fig.savefig(PLOT_DIR / "06_pred_accuracy_dist.png", dpi=150)

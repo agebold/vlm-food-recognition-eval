@@ -147,15 +147,10 @@ g.selectAll(".pct").data(data).join("text")
   .attr("fill",d=>d.color)
   .text(d=>d.acc.toFixed(1)+"%");
 
-// Y axis — model names, colored, no tick marks, no axis line
+// Y axis — model names, black
 const yAx = g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(12));
 yAx.select(".domain").remove();
-yAx.selectAll("text")
-  .attr("font-size",13).attr("font-weight","700")
-  .each(function(d) {{
-    const row = data.find(r => r.model === d);
-    d3.select(this).attr("fill", row ? row.color : "#374151");
-  }});
+yAx.selectAll("text").attr("font-size",13).attr("font-weight","700").attr("fill","#111827");
 
 // X axis — clean, 0 to 90%
 const xAx = g.append("g").attr("transform",`translate(0,${{H}})`).call(
@@ -516,14 +511,10 @@ panels.forEach((panel,pi)=>{{
    .attr("dy","0.35em").attr("font-size",13).attr("font-weight","800")
    .attr("fill",m=>m.color).text(m=>m.f1.toFixed(3));
 
-  // Y axis: model names in model color
+  // Y axis: model names in black
   const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
   yAx.select(".domain").remove();
-  yAx.selectAll("text").attr("font-size",13).attr("font-weight","700")
-    .each(function(d){{
-      const row=panel.models.find(m=>m.model===d);
-      d3.select(this).attr("fill",row?row.color:"#111827");
-    }});
+  yAx.selectAll("text").attr("font-size",13).attr("font-weight","700").attr("fill","#111827");
 
   // X axis
   const xAx=g.append("g").attr("transform",`translate(0,${{CH}})`)
