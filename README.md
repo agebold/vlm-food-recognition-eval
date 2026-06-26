@@ -8,7 +8,7 @@ Reproducible evaluation harness for photo-based food ingredient recognition usin
 
 Full 507-dish evaluation on the Nutrition5k overhead test split — **10 vision models** across two run sessions. All models use the same prompt, same test images, same metric. Claude Opus 4.8 was run via the Anthropic API; the other nine via AWS Bedrock (`us-east-2`).
 
-### Prediction accuracy
+### Prediction Accuracy
 
 **Prediction accuracy** = fraction of named ingredients that were actually in the dish. It's the fairest primary metric here, because you cannot see invisible ingredients (olive oil, salt, pepper) in a photo and recall punishes a model for not naming them. Rows sorted by prediction accuracy; all values computed at match threshold `sim ≥ 0.4` by [eval/prediction_metrics.py](eval/prediction_metrics.py) / [eval/plot_analysis.py](eval/plot_analysis.py).
 
@@ -29,7 +29,7 @@ Full 507-dish evaluation on the Nutrition5k overhead test split — **10 vision 
 - **Zero-Correct** — % of dishes where the model got nothing right.
 - **All-Correct** — % of dishes where *every* ingredient the model named was real.
 
-### What these numbers mean
+### Interpretation
 
 **Kimi K2.5 leads, and the disciplined models win generally.** Kimi tops F1 (0.682), precision (0.733), and prediction accuracy (85.1%) while naming only 3.6 ingredients per dish. The next tier — Maverick, Scout, Qwen3-VL — all sit at 83–84% accuracy with ~3 predictions/dish. High accuracy comes from naming what you can actually see, not from guessing more.
 
@@ -50,7 +50,7 @@ At 10–40× cheaper with *higher* prediction accuracy, the open/third-party Bed
 
 ---
 
-## Why "Recall" Is a Misleading Metric Here
+## Limitations of Recall
 
 The PMC13092701 paper reports recall, and we implement it faithfully — but treating it as a real performance signal is wrong.
 
@@ -115,7 +115,7 @@ Distribution of per-dish prediction accuracy (correct/predicted) across all 507 
 
 ---
 
-## Dataset: Nutrition5k
+## Dataset
 
 - **5,006 plates** of real cafeteria food with per-ingredient mass, calorie, fat, carb, protein annotations
 - **507 overhead RGB test images** from the `depth_test_ids.txt` split — pre-extracted PNGs, no video decoding needed
@@ -133,7 +133,7 @@ done < eval/data/nutrition5k/dish_ids/splits/depth_test_ids.txt
 
 ---
 
-## Metric: PMC13092701 Equations 1–6
+## Evaluation Metric
 
 Ingredient matching is **soft** — partial name matches contribute fractionally via normalized LCS, and known synonyms match perfectly.
 
@@ -155,7 +155,7 @@ Where `P` = predicted ingredient list (from VLM), `T` = ground-truth ingredient 
 
 ---
 
-## Prompt Used
+## Prompt
 
 All models receive the same prompt at temperature 0.1:
 
@@ -192,9 +192,9 @@ eval/
 
 ---
 
-## Running the Evals
+## Running the Evaluations
 
-### AWS Bedrock (fastest — 507 dishes in ~20 min)
+### AWS Bedrock
 
 ```bash
 cd eval
@@ -213,7 +213,7 @@ python3 run_eval_bedrock.py --model <model-id> --out results/mymodel.json
 
 Runs resume automatically if interrupted (incremental save after each dish).
 
-#### Run several models in parallel (one process per model)
+#### Parallel Multi-Model Runs
 
 Each model has its own Bedrock rate-limit bucket (`account × region × model`), so running different models concurrently is safe — they never contend. The launcher fans out 5 evaluators (Haiku 4.5, Sonnet 4.6, Nova 2 Lite, Qwen3-VL, Kimi K2.5) in `us-east-2`:
 
@@ -229,7 +229,7 @@ python3 prediction_metrics.py    # prediction-accuracy / correct-per-dish table
 
 Per-model config (model id, region, delay, max tokens) lives in the thin `eval/eval_<model>.py` scripts; shared logic — Converse-with-image, exponential backoff on `ThrottlingException`, resume — is in [eval/bedrock_core.py](eval/bedrock_core.py).
 
-### Apple Silicon / MLX (local, unquantized)
+### Apple Silicon (MLX)
 
 ```bash
 cd eval
@@ -249,7 +249,7 @@ python3.12 run_eval_mlx.py \
 
 **Note on MLX memory:** After ~100 consecutive inference calls, the Metal allocator accumulates state and model outputs degrade to empty responses. The `--reload-every` flag deletes the old model before reloading to avoid double-loading 16 GB on 24 GB unified memory.
 
-### Generate Plots
+### Generating Plots
 
 ```bash
 cd eval
