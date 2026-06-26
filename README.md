@@ -50,7 +50,7 @@ At 10–40× cheaper with *higher* prediction accuracy, the open/third-party Bed
 
 ---
 
-## Limitations of Recall
+## Recall
 
 The PMC13092701 paper reports recall, and we implement it faithfully — but treating it as a real performance signal is wrong.
 
@@ -79,7 +79,7 @@ A model that correctly answers "I see chicken, rice, broccoli, and cherry tomato
 
 ---
 
-## Analysis Plots
+## Plots
 
 All plots are in [eval/plots/](eval/plots/).
 
@@ -133,7 +133,7 @@ done < eval/data/nutrition5k/dish_ids/splits/depth_test_ids.txt
 
 ---
 
-## Evaluation Metric
+## Metric
 
 Ingredient matching is **soft** — partial name matches contribute fractionally via normalized LCS, and known synonyms match perfectly.
 
@@ -192,7 +192,7 @@ eval/
 
 ---
 
-## Running the Evaluations
+## Usage
 
 ### AWS Bedrock
 
@@ -266,7 +266,7 @@ python3 analyze_failures.py results/bedrock_kimi25_overhead.json --top 20
 
 ---
 
-## Benchmark Limitations
+## Limitations
 
 **1. Ground truth includes invisible ingredients.** Nutrition5k was designed for nutritional estimation, not visual recognition. Many GT ingredients (olive oil, salt, vinegar, garlic) are physically impossible to identify from photos. The top missed ingredients across all models are exactly these invisible items. Any eval on this dataset that doesn't account for this will understate model performance.
 
