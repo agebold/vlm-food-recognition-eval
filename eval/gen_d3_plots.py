@@ -138,25 +138,25 @@ g.selectAll(".bar").data(data).join("rect")
   .attr("fill",d=>d.color)
   .attr("rx",4);
 
-// Percentage label at bar end — bold, matching color
+// Percentage label at bar end
 g.selectAll(".pct").data(data).join("text")
   .attr("x",d=>x(d.acc)+10)
   .attr("y",d=>y(d.model)+y.bandwidth()/2)
   .attr("dy","0.35em")
-  .attr("font-size",14).attr("font-weight","800")
-  .attr("fill",d=>d.color)
+  .attr("font-size",12).attr("font-weight","700")
+  .attr("fill","#111827")
   .text(d=>d.acc.toFixed(1)+"%");
 
 // Y axis — model names, black
 const yAx = g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(12));
 yAx.select(".domain").remove();
-yAx.selectAll("text").attr("font-size",13).attr("font-weight","700").attr("fill","#111827");
+yAx.selectAll("text").attr("font-size",12).attr("font-weight","600").attr("fill","#111827");
 
 // X axis — clean, 0 to 90%
 const xAx = g.append("g").attr("transform",`translate(0,${{H}})`).call(
   d3.axisBottom(x).tickValues([0,20,40,60,80]).tickFormat(d=>d+"%").tickSize(5));
 xAx.select(".domain").attr("stroke","#9CA3AF");
-xAx.selectAll("text").attr("font-size",11).attr("fill","#111827");
+xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
 xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 
 g.append("text").attr("class","axl")
@@ -238,25 +238,25 @@ panels.forEach((m,i)=>{{
 
   // Stats label
   g.append("text").attr("x",CW).attr("y",12).attr("text-anchor","end")
-   .attr("font-size",10).attr("font-weight","600").attr("fill","#111827")
+   .attr("font-size",11).attr("font-weight","600").attr("fill","#111827")
    .text(`median ${{m.med}}  ·  mean ${{m.mean}}`);
 
-  // Panel title — model color, bold
+  // Panel title — black
   g.append("text").attr("x",0).attr("y",-20)
-   .attr("font-size",12).attr("font-weight","800").attr("fill",m.color)
+   .attr("font-size",14).attr("font-weight","800").attr("fill","#111827")
    .text(m.model);
 
   // X axis
   const xAx=g.append("g").attr("transform",`translate(0,${{CH}})`).call(
     d3.axisBottom(x).ticks(maxV+1).tickFormat(d3.format("d")).tickSize(4));
   xAx.select(".domain").attr("stroke","#9CA3AF");
-  xAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+  xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
   xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 
   if(col===0){{
     const yAx=g.append("g").call(d3.axisLeft(y).ticks(4).tickSize(4));
     yAx.select(".domain").attr("stroke","#9CA3AF");
-    yAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+    yAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
     yAx.selectAll(".tick line").attr("stroke","#9CA3AF");
     g.append("text").attr("class","axl").attr("transform","rotate(-90)")
      .attr("x",-CH/2).attr("y",-40).attr("text-anchor","middle").text("dishes");
@@ -326,14 +326,14 @@ g.selectAll("rect").data(data).join("rect")
 // Count labels
 g.selectAll(".cnt").data(data).join("text")
   .attr("x",d=>x(d.count)+6).attr("y",d=>y(d.ing)+y.bandwidth()/2).attr("dy","0.35em")
-  .attr("font-size",10).attr("font-weight","600").attr("fill","#374151")
+  .attr("font-size",12).attr("font-weight","700").attr("fill","#111827")
   .text(d=>d.count.toLocaleString());
 
 // Y axis
 const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
 yAx.select(".domain").remove();
 yAx.selectAll("text")
-  .attr("font-size",10.5)
+  .attr("font-size",11)
   .attr("font-weight","600")
   .each(function(d){{
     d3.select(this).attr("fill", INVIS.has(d) ? "#B91C1C" : "#111827");
@@ -342,7 +342,7 @@ yAx.selectAll("text")
 // X axis
 const xAx=g.append("g").attr("transform",`translate(0,${{H}})`).call(d3.axisBottom(x).ticks(5));
 xAx.select(".domain").attr("stroke","#9CA3AF");
-xAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
 xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+42).attr("text-anchor","middle")
   .text("total misses");
@@ -350,7 +350,7 @@ g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+42).attr("text-anc
 // Callout annotation
 g.append("text")
   .attr("x",x(data[0].count)+6).attr("y",y(data[0].ing)-7)
-  .attr("font-size",10).attr("font-style","italic").attr("font-weight","600").attr("fill","#B91C1C")
+  .attr("font-size",11).attr("font-style","italic").attr("font-weight","600").attr("fill","#B91C1C")
   .text("877× — liquid absorbed into food, no visual trace");
 """
 
@@ -405,20 +405,20 @@ panels.forEach((m,i)=>{{
   // Count labels
   g.selectAll(".lbl").data(m.items).join("text")
     .attr("x",d=>x(d.count)+5).attr("y",d=>y(d.ing)+y.bandwidth()/2).attr("dy","0.35em")
-    .attr("font-size",10).attr("font-weight","600").attr("fill","#374151")
+    .attr("font-size",12).attr("font-weight","700").attr("fill","#111827")
     .text(d=>d.count);
 
-  // Panel title
+  // Panel title — black
   g.append("text").attr("x",0).attr("y",-20)
-   .attr("font-size",12).attr("font-weight","800").attr("fill",m.color).text(m.model);
+   .attr("font-size",14).attr("font-weight","800").attr("fill","#111827").text(m.model);
 
   const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(8));
   yAx.select(".domain").remove();
-  yAx.selectAll("text").attr("font-size",9.5).attr("fill","#374151").attr("font-weight","500");
+  yAx.selectAll("text").attr("font-size",11).attr("fill","#111827").attr("font-weight","600");
 
   const xAx=g.append("g").attr("transform",`translate(0,${{CH}})`).call(d3.axisBottom(x).ticks(4));
   xAx.select(".domain").attr("stroke","#9CA3AF");
-  xAx.selectAll("text").attr("font-size",9).attr("font-weight","600").attr("fill","#111827");
+  xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
   xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 }});
 """
@@ -487,10 +487,10 @@ panels.forEach((panel,pi)=>{{
 
   // Panel title block — large, above panel
   g.append("text").attr("x",CW/2).attr("y",-36)
-   .attr("text-anchor","middle").attr("font-size",16).attr("font-weight","800").attr("fill","#111827")
+   .attr("text-anchor","middle").attr("font-size",14).attr("font-weight","800").attr("fill","#111827")
    .text(panel.label);
   g.append("text").attr("x",CW/2).attr("y",-16)
-   .attr("text-anchor","middle").attr("font-size",12).attr("font-weight","600").attr("fill","#374151")
+   .attr("text-anchor","middle").attr("font-size",11).attr("font-weight","600").attr("fill","#111827")
    .text(panel.sub+"  ·  n="+panel.n+" dishes");
 
   // Vertical grid at tick positions
@@ -508,13 +508,13 @@ panels.forEach((panel,pi)=>{{
   // F1 label at bar right — bold, black
   g.selectAll(".lbl").data(panel.models).join("text")
    .attr("x",m=>x(m.f1)+9).attr("y",m=>y(m.model)+y.bandwidth()/2)
-   .attr("dy","0.35em").attr("font-size",13).attr("font-weight","800")
+   .attr("dy","0.35em").attr("font-size",12).attr("font-weight","700")
    .attr("fill","#111827").text(m=>m.f1.toFixed(3));
 
   // Y axis: model names in black
   const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
   yAx.select(".domain").remove();
-  yAx.selectAll("text").attr("font-size",13).attr("font-weight","700").attr("fill","#111827");
+  yAx.selectAll("text").attr("font-size",12).attr("font-weight","600").attr("fill","#111827");
 
   // X axis
   const xAx=g.append("g").attr("transform",`translate(0,${{CH}})`)
@@ -614,7 +614,7 @@ data.forEach(row=>{{
       g.append("text")
        .attr("x",bx+bw/2).attr("y",by+bh/2).attr("dy","0.35em")
        .attr("text-anchor","middle")
-       .attr("font-size",seg.pct>=12?13:10).attr("font-weight","800")
+       .attr("font-size",12).attr("font-weight","700")
        .attr("fill","#fff")
        .text(seg.pct.toFixed(0)+"%");
     }}
@@ -623,15 +623,15 @@ data.forEach(row=>{{
 
   // Model name — left, bold, dark
   g.append("text").attr("x",-12).attr("y",y(row.model)+y.bandwidth()/2).attr("dy","0.35em")
-   .attr("text-anchor","end").attr("font-size",12).attr("font-weight","700")
-   .attr("fill","#1F2937").text(row.model);
+   .attr("text-anchor","end").attr("font-size",12).attr("font-weight","600")
+   .attr("fill","#111827").text(row.model);
 }});
 
 // X axis — % of dishes
 const xAx=g.append("g").attr("transform",`translate(0,${{H}})`).call(
   d3.axisBottom(x).tickValues([0,25,50,75,100]).tickFormat(d=>d+"%").tickSize(5));
 xAx.select(".domain").attr("stroke","#9CA3AF");
-xAx.selectAll("text").attr("font-size",11).attr("font-weight","700").attr("fill","#111827");
+xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
 xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+46)
   .attr("text-anchor","middle").text("Share of dishes (%)");

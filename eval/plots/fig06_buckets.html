@@ -74,7 +74,7 @@ data.forEach(row=>{
       g.append("text")
        .attr("x",bx+bw/2).attr("y",by+bh/2).attr("dy","0.35em")
        .attr("text-anchor","middle")
-       .attr("font-size",seg.pct>=12?13:10).attr("font-weight","800")
+       .attr("font-size",12).attr("font-weight","700")
        .attr("fill","#fff")
        .text(seg.pct.toFixed(0)+"%");
     }
@@ -83,15 +83,15 @@ data.forEach(row=>{
 
   // Model name — left, bold, dark
   g.append("text").attr("x",-12).attr("y",y(row.model)+y.bandwidth()/2).attr("dy","0.35em")
-   .attr("text-anchor","end").attr("font-size",12).attr("font-weight","700")
-   .attr("fill","#1F2937").text(row.model);
+   .attr("text-anchor","end").attr("font-size",12).attr("font-weight","600")
+   .attr("fill","#111827").text(row.model);
 });
 
 // X axis — % of dishes
 const xAx=g.append("g").attr("transform",`translate(0,${H})`).call(
   d3.axisBottom(x).tickValues([0,25,50,75,100]).tickFormat(d=>d+"%").tickSize(5));
 xAx.select(".domain").attr("stroke","#9CA3AF");
-xAx.selectAll("text").attr("font-size",11).attr("font-weight","700").attr("fill","#111827");
+xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
 xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+46)
   .attr("text-anchor","middle").text("Share of dishes (%)");

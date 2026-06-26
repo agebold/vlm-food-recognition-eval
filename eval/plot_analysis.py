@@ -80,11 +80,11 @@ sorted_accs   = [accs[i]   for i in order]
 sorted_colors = [colors[i] for i in order]
 bars = ax.bar(sorted_names, sorted_accs, color=sorted_colors, width=0.55,
               edgecolor="white", linewidth=0.8)
-ax.bar_label(bars, fmt="%.1f%%", padding=4, fontsize=10, fontweight="bold")
+ax.bar_label(bars, fmt="%.1f%%", padding=4, fontsize=9, fontweight="bold")
 ax.set_ylim(75, 90)
-ax.set_ylabel("Prediction accuracy (%)", fontsize=11)
+ax.set_ylabel("Prediction accuracy (%)", fontsize=10)
 ax.set_title("When a model names an ingredient, how often is it actually in the dish?",
-             fontsize=11, pad=12)
+             fontsize=11, fontweight="bold", pad=12)
 ax.set_xticklabels(sorted_names, fontsize=9, rotation=15, ha="right")
 ax.yaxis.set_minor_locator(mticker.AutoMinorLocator())
 ax.grid(axis="y", alpha=0.3)
@@ -119,10 +119,10 @@ for idx, (name, color) in enumerate(zip(names, colors)):
     ax.axvline(mean, color="#D97706", linestyle=":",  linewidth=1.5, label=f"mean {mean:.1f}")
     title = name + (f"  [{clipped} outlier>cap]" if clipped else "")
     ax.set_title(title, fontsize=10, fontweight="bold", color="black", pad=6)
-    ax.set_xlabel("Correct ingredients per dish", fontsize=9)
-    ax.set_ylabel("Number of dishes", fontsize=9)
+    ax.set_xlabel("Correct ingredients per dish", fontsize=10)
+    ax.set_ylabel("Number of dishes", fontsize=10)
     ax.set_xlim(0, X_CAP + 1)
-    ax.legend(fontsize=8, loc="upper right", framealpha=0.85)
+    ax.legend(fontsize=9, loc="upper right", framealpha=0.85)
     ax.spines[["top", "right"]].set_visible(False)
     ax.tick_params(labelsize=9)
 
@@ -155,8 +155,8 @@ ax.set_yticklabels(top_missed, fontsize=9)
 ax.invert_yaxis()
 ax.set_xlabel(f"Times missed across all {len(names)} models × ~507 dishes", fontsize=10)
 ax.set_title("Top 25 ingredients most often missed (GT present, model didn't name it)",
-             fontsize=11, pad=12)
-ax.bar_label(bars, padding=3, fontsize=8)
+             fontsize=11, fontweight="bold", pad=12)
+ax.bar_label(bars, padding=3, fontsize=9, fontweight="bold")
 ax.spines[["top", "right"]].set_visible(False)
 ax.grid(axis="x", alpha=0.3)
 fig.tight_layout()
@@ -179,25 +179,26 @@ for idx, (name, color) in enumerate(zip(names, colors)):
     if not top:
         ax.text(0.5, 0.5, "No hallucinations", ha="center", va="center",
                 transform=ax.transAxes, fontsize=9)
-        ax.set_title(name, fontsize=10, fontweight="bold")
+        ax.set_title(name, fontsize=11, fontweight="bold")
         ax.set_visible(True)
         continue
     ings, cnts = zip(*top)
     y = np.arange(len(ings))
     ax.barh(y, cnts, color=color, edgecolor="white", alpha=0.85)
     ax.set_yticks(y)
-    ax.set_yticklabels(ings, fontsize=8)
+    ax.set_yticklabels(ings, fontsize=9)
     ax.invert_yaxis()
-    ax.set_title(name, fontsize=10, fontweight="bold", pad=6)
-    ax.set_xlabel("Times hallucinated", fontsize=8)
+    ax.set_title(name, fontsize=11, fontweight="bold", pad=6)
+    ax.set_xlabel("Times hallucinated", fontsize=10)
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="x", alpha=0.3)
-    ax.tick_params(labelsize=8)
+    ax.tick_params(labelsize=9)
 
 for idx in range(len(names), NROWS * NCOLS):
     axes_flat[idx].set_visible(False)
 
-fig.suptitle("Top hallucinated ingredients per model (predicted but not in GT)", fontsize=12)
+fig.suptitle("Top hallucinated ingredients per model (predicted but not in GT)", fontsize=12,
+             fontweight="bold")
 fig.tight_layout()
 fig.savefig(PLOT_DIR / "04_hallucinated.png", dpi=150, bbox_inches="tight")
 plt.close()

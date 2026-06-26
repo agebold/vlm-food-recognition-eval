@@ -77,25 +77,25 @@ panels.forEach((m,i)=>{
 
   // Stats label
   g.append("text").attr("x",CW).attr("y",12).attr("text-anchor","end")
-   .attr("font-size",10).attr("font-weight","600").attr("fill","#111827")
+   .attr("font-size",11).attr("font-weight","600").attr("fill","#111827")
    .text(`median ${m.med}  ·  mean ${m.mean}`);
 
-  // Panel title — model color, bold
+  // Panel title — black
   g.append("text").attr("x",0).attr("y",-20)
-   .attr("font-size",12).attr("font-weight","800").attr("fill",m.color)
+   .attr("font-size",14).attr("font-weight","800").attr("fill","#111827")
    .text(m.model);
 
   // X axis
   const xAx=g.append("g").attr("transform",`translate(0,${CH})`).call(
     d3.axisBottom(x).ticks(maxV+1).tickFormat(d3.format("d")).tickSize(4));
   xAx.select(".domain").attr("stroke","#9CA3AF");
-  xAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+  xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
   xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 
   if(col===0){
     const yAx=g.append("g").call(d3.axisLeft(y).ticks(4).tickSize(4));
     yAx.select(".domain").attr("stroke","#9CA3AF");
-    yAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+    yAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
     yAx.selectAll(".tick line").attr("stroke","#9CA3AF");
     g.append("text").attr("class","axl").attr("transform","rotate(-90)")
      .attr("x",-CH/2).attr("y",-40).attr("text-anchor","middle").text("dishes");

@@ -28,7 +28,7 @@ text{font-family:'Inter',system-ui,sans-serif}
 <body><script>
 
 const data  = [{"ing": "olive oil", "count": 1044}, {"ing": "salt", "count": 737}, {"ing": "pepper", "count": 428}, {"ing": "garlic", "count": 406}, {"ing": "mustard", "count": 375}, {"ing": "vinegar", "count": 334}, {"ing": "arugula", "count": 245}, {"ing": "onions", "count": 234}, {"ing": "lemon juice", "count": 232}, {"ing": "shallots", "count": 217}, {"ing": "wheat berry", "count": 215}, {"ing": "parsley", "count": 201}, {"ing": "thyme", "count": 201}, {"ing": "mixed greens", "count": 197}, {"ing": "cucumbers", "count": 165}, {"ing": "basil", "count": 160}, {"ing": "chard", "count": 159}, {"ing": "rosemary", "count": 153}, {"ing": "jalapenos", "count": 127}, {"ing": "spinach (raw)", "count": 120}, {"ing": "mushroom", "count": 118}, {"ing": "bok choy", "count": 116}, {"ing": "pork", "count": 110}, {"ing": "carrot", "count": 106}, {"ing": "fish", "count": 101}];
-const INVIS = new Set(["thyme", "olive oil", "lemon juice", "cumin", "oregano", "vinegar", "cinnamon", "ginger", "flour", "paprika", "white wine", "basil", "shallots", "onions", "mustard", "garlic", "salt", "pepper", "rosemary"]);
+const INVIS = new Set(["thyme", "mustard", "olive oil", "white wine", "ginger", "pepper", "rosemary", "lemon juice", "shallots", "flour", "oregano", "cumin", "garlic", "basil", "paprika", "salt", "vinegar", "cinnamon", "onions"]);
 const W=520, rowH=28, H=data.length*rowH;
 const m={t:110,r:72,b:52,l:148};
 
@@ -68,14 +68,14 @@ g.selectAll("rect").data(data).join("rect")
 // Count labels
 g.selectAll(".cnt").data(data).join("text")
   .attr("x",d=>x(d.count)+6).attr("y",d=>y(d.ing)+y.bandwidth()/2).attr("dy","0.35em")
-  .attr("font-size",10).attr("font-weight","600").attr("fill","#374151")
+  .attr("font-size",12).attr("font-weight","700").attr("fill","#111827")
   .text(d=>d.count.toLocaleString());
 
 // Y axis
 const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
 yAx.select(".domain").remove();
 yAx.selectAll("text")
-  .attr("font-size",10.5)
+  .attr("font-size",11)
   .attr("font-weight","600")
   .each(function(d){
     d3.select(this).attr("fill", INVIS.has(d) ? "#B91C1C" : "#111827");
@@ -84,7 +84,7 @@ yAx.selectAll("text")
 // X axis
 const xAx=g.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(5));
 xAx.select(".domain").attr("stroke","#9CA3AF");
-xAx.selectAll("text").attr("font-size",10).attr("font-weight","600").attr("fill","#111827");
+xAx.selectAll("text").attr("font-size",11).attr("font-weight","600").attr("fill","#111827");
 xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
 g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+42).attr("text-anchor","middle")
   .text("total misses");
@@ -92,7 +92,7 @@ g.append("text").attr("class","axl").attr("x",W/2).attr("y",H+42).attr("text-anc
 // Callout annotation
 g.append("text")
   .attr("x",x(data[0].count)+6).attr("y",y(data[0].ing)-7)
-  .attr("font-size",10).attr("font-style","italic").attr("font-weight","600").attr("fill","#B91C1C")
+  .attr("font-size",11).attr("font-style","italic").attr("font-weight","600").attr("fill","#B91C1C")
   .text("877× — liquid absorbed into food, no visual trace");
 
 </script></body>
