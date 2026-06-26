@@ -237,11 +237,11 @@ for bi, (ax, (lo, hi, label)) in enumerate(zip(axes, BUCK5)):
 
     bars = ax.barh(y_pos, f1_vals, color=scolors, height=0.65, edgecolor="white", linewidth=0.5)
 
-    # Value labels at bar end, bold, model color
-    for bar, val, col in zip(bars, f1_vals, scolors):
+    # Value labels at bar end, bold, black
+    for bar, val in zip(bars, f1_vals):
         if not math.isnan(val):
             ax.text(val + 0.003, bar.get_y() + bar.get_height() / 2,
-                    f"{val:.3f}", va="center", fontsize=10, fontweight="bold", color=col)
+                    f"{val:.3f}", va="center", fontsize=10, fontweight="bold", color="black")
 
     ax.set_yticks(y_pos)
     if bi == 0:
@@ -287,17 +287,17 @@ fig, ax = plt.subplots(figsize=(10, 5))
 bar_h = 0.35
 # Green bars — all guesses correct
 ax.barh(y_pos + bar_h / 2, [r["all_correct"]  for r in model_rows6],
-        height=bar_h, color="#059669", label="No wrong guesses (100% accuracy)")
+        height=bar_h, color="#065F46", label="No wrong guesses (100% accuracy)")
 # Red bars — zero guesses correct
 ax.barh(y_pos - bar_h / 2, [r["zero_correct"] for r in model_rows6],
-        height=bar_h, color="#DC2626", label="Zero correct  (0% accuracy)")
+        height=bar_h, color="#7F1D1D", label="Zero correct  (0% accuracy)")
 
 # Value labels
 for i, r in enumerate(model_rows6):
     ax.text(r["all_correct"]  + 0.5, i + bar_h / 2, f"{r['all_correct']:.1f}%",
-            va="center", fontsize=9, fontweight="bold", color="#059669")
+            va="center", fontsize=9, fontweight="bold", color="#065F46")
     ax.text(r["zero_correct"] + 0.5, i - bar_h / 2, f"{r['zero_correct']:.1f}%",
-            va="center", fontsize=9, fontweight="bold", color="#DC2626")
+            va="center", fontsize=9, fontweight="bold", color="#7F1D1D")
 
 ax.set_yticks(y_pos)
 ax.set_yticklabels([r["name"] for r in model_rows6], fontsize=10, fontweight="bold")

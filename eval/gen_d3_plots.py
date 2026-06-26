@@ -505,11 +505,11 @@ panels.forEach((panel,pi)=>{{
    .attr("width",m=>x(m.f1)).attr("height",y.bandwidth())
    .attr("fill",m=>m.color).attr("rx",4);
 
-  // F1 label at bar right — bold, model color
+  // F1 label at bar right — bold, black
   g.selectAll(".lbl").data(panel.models).join("text")
    .attr("x",m=>x(m.f1)+9).attr("y",m=>y(m.model)+y.bandwidth()/2)
    .attr("dy","0.35em").attr("font-size",13).attr("font-weight","800")
-   .attr("fill",m=>m.color).text(m=>m.f1.toFixed(3));
+   .attr("fill","#111827").text(m=>m.f1.toFixed(3));
 
   // Y axis: model names in black
   const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
@@ -546,10 +546,10 @@ print("✓ fig05_complexity.html")
 #   % label inside each segment if wide enough.
 # ════════════════════════════════════════════════════════════════════════
 BUCKETS6 = [
-    ("Perfect (100%)",  100, 100, "#059669"),
-    ("Good (75–99%)",    75,  99, "#1D4ED8"),
-    ("Fair (50–74%)",    50,  74, "#D97706"),
-    ("Poor  (<50%)",      0,  49, "#DC2626"),
+    ("Perfect (100%)",  100, 100, "#065F46"),  # dark emerald
+    ("Good (75–99%)",    75,  99, "#1E3A8A"),  # dark navy
+    ("Fair (50–74%)",    50,  74, "#92400E"),  # dark amber-brown
+    ("Poor  (<50%)",      0,  49, "#7F1D1D"),  # dark crimson
 ]
 
 fig6 = []
