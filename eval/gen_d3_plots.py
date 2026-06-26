@@ -433,15 +433,13 @@ print("✓ fig04_hallucinated.html")
 
 
 # ════════════════════════════════════════════════════════════════════════
-# FIG 5 — SLOPEGRAPH  F1 by complexity
-#   All 6 models in their own strong colors. NO gray band.
-#   Key 3 (Kimi / Claude / Maverick): 4px lines, r=10 circles.
-#   Other 3: 2.5px lines, r=7 circles.
-#   F1 labels at every point for all models, bold.
+# FIG 5 — 3-panel grouped horizontal bar chart (NO line plot)
+#   3 panels side-by-side: Simple / Moderate / Complex
+#   Each panel: all 6 models as horizontal bars, sorted by F1 descending
+#   Same tight x-axis domain across all panels — makes drop obvious
 # ════════════════════════════════════════════════════════════════════════
 BUCKETS = [(1,3,"Simple"),(4,8,"Moderate"),(9,99,"Complex")]
 BUCK_SUB = ["1–3 ingredients","4–8 ingredients","9+ ingredients"]
-HIGHLIGHT = ["Kimi K2.5","Claude Opus 4.8","Llama4 Maverick"]
 
 all_f1 = {}
 for n in names:
@@ -449,122 +447,93 @@ for n in names:
     for lo,hi,label in BUCKETS:
         grp = [s["scores"]["f1"] for s in raw[n]["samples"]
                if lo <= len(s["ground_truth"]) <= hi]
-        pts.append({"b":label,"f1":round(statistics.mean(grp),4) if grp else 0,"n":len(grp)})
+        pts.append({"f1":round(statistics.mean(grp),4) if grp else 0,"n":len(grp)})
     all_f1[n] = pts
 
-fig5 = [{"model":n,"color":COLOR[n],"pts":all_f1[n],"hi": n in HIGHLIGHT} for n in names]
-ns_per_bucket = [all_f1["Kimi K2.5"][i]["n"] for i in range(3)]
+# Sort order fixed by Simple F1 descending — consistent across all 3 panels
+_sort_order = sorted(names, key=lambda n: all_f1[n][0]["f1"], reverse=True)
 
-# Data-driven y domain — spread the chart, no cramping
-_all_f1_vals = [pt["f1"] for n in names for pt in all_f1[n]]
-_y_lo = round(min(_all_f1_vals) - 0.05, 2)
-_y_hi = round(max(_all_f1_vals) + 0.05, 2)
+panels5 = []
+for bi,(lo,hi,label) in enumerate(BUCKETS):
+    panels5.append({
+        "label": label, "sub": BUCK_SUB[bi],
+        "n": all_f1[_sort_order[0]][bi]["n"],
+        "models": [{"model":n,"color":COLOR[n],"f1":all_f1[n][bi]["f1"]}
+                   for n in _sort_order],
+    })
+
+_all_f1_vals = [all_f1[n][bi]["f1"] for n in names for bi in range(3)]
+_x_lo = round(min(_all_f1_vals) - 0.02, 2)
+_x_hi = round(max(_all_f1_vals) + 0.03, 2)
 
 js5 = f"""
-const series  = {json.dumps(fig5)};
-const bsub    = {json.dumps(BUCK_SUB)};
-const ns      = {json.dumps(ns_per_bucket)};
-const buckets = ["Simple","Moderate","Complex"];
+const panels = {json.dumps(panels5)};
+const X_LO={json.dumps(_x_lo)}, X_HI={json.dumps(_x_hi)};
 
-const W=520, H=400;
-const m={{t:104,r:234,b:80,l:64}};
+const CW=220, CH=252, GAP=28;
+const pm={{t:64,r:72,b:52,l:136}};
+const TW=3*(CW+pm.l+pm.r)+2*GAP;
+const TH=90+CH+pm.t+pm.b;
 
-const svg=d3.select("body").append("svg")
-  .attr("width",W+m.l+m.r).attr("height",H+m.t+m.b);
+const svg=d3.select("body").append("svg").attr("width",TW).attr("height",TH);
 
-svg.append("text").attr("class","ttl").attr("x",m.l).attr("y",36)
-  .text("F1 score collapses on complex dishes — all 6 models");
-svg.append("text").attr("class","sub").attr("x",m.l).attr("y",60)
-  .text("Average F1 (PMC13092701) by dish complexity · Kimi K2.5 degrades least");
-svg.append("text").attr("class","sub").attr("x",m.l).attr("y",80).attr("font-style","italic")
-  .text("Bold lines = Kimi / Claude / Maverick · Thin lines = Scout / Nova Pro / Nova Lite");
+svg.append("text").attr("class","ttl").attr("x",32).attr("y",36)
+  .text("F1 degrades sharply with dish complexity — all 6 models");
+svg.append("text").attr("class","sub").attr("x",32).attr("y",60)
+  .text("Average F1 (PMC13092701) · same x-scale across panels · models ranked by Simple F1");
 
-const g=svg.append("g").attr("transform",`translate(${{m.l}},${{m.t}})`);
+panels.forEach((panel,pi)=>{{
+  const ox=pi*(CW+pm.l+pm.r+GAP)+pm.l;
+  const oy=90+pm.t;
+  const g=svg.append("g").attr("transform",`translate(${{ox}},${{oy}})`);
 
-const x=d3.scalePoint().domain(buckets).range([0,W]).padding(0.3);
-const y=d3.scaleLinear().domain([{json.dumps(_y_lo)},{json.dumps(_y_hi)}]).range([H,0]);
+  const x=d3.scaleLinear().domain([X_LO,X_HI]).range([0,CW]);
+  const y=d3.scaleBand().domain(panel.models.map(m=>m.model)).range([0,CH]).padding(0.3);
 
-// Hairline grid
-y.ticks(5).forEach(v=>{{
-  g.append("line")
-   .attr("x1",0).attr("x2",W).attr("y1",y(v)).attr("y2",y(v))
-   .attr("stroke","#E5E7EB").attr("stroke-width",0.8);
-  g.append("text").attr("x",-10).attr("y",y(v)).attr("dy","0.35em")
-   .attr("text-anchor","end").attr("font-size",11).attr("font-weight","700").attr("fill","#111827")
-   .text(v.toFixed(2));
-}});
+  // Panel title block — large, above panel
+  g.append("text").attr("x",CW/2).attr("y",-36)
+   .attr("text-anchor","middle").attr("font-size",16).attr("font-weight","800").attr("fill","#111827")
+   .text(panel.label);
+  g.append("text").attr("x",CW/2).attr("y",-16)
+   .attr("text-anchor","middle").attr("font-size",12).attr("font-weight","600").attr("fill","#374151")
+   .text(panel.sub+"  ·  n="+panel.n+" dishes");
 
-// Draw non-highlighted models first (bottom layer), then highlighted on top
-const layers=[series.filter(s=>!s.hi), series.filter(s=>s.hi)];
-const lineGen=d3.line().x(d=>x(d.b)).y(d=>y(d.f1)).curve(d3.curveMonotoneX);
-
-layers.forEach(layer=>{{
-  // Lines
-  layer.forEach(s=>{{
-    g.append("path").datum(s.pts)
-     .attr("d",lineGen).attr("fill","none")
-     .attr("stroke",s.color)
-     .attr("stroke-width",s.hi?4:2.5)
-     .attr("stroke-linejoin","round").attr("stroke-linecap","round");
+  // Vertical grid at tick positions
+  x.ticks(4).forEach(v=>{{
+    g.append("line").attr("x1",x(v)).attr("x2",x(v)).attr("y1",0).attr("y2",CH)
+     .attr("stroke","#E5E7EB").attr("stroke-width",1);
   }});
 
-  // Circles + F1 labels
-  layer.forEach(s=>{{
-    const r=s.hi?10:7;
-    s.pts.forEach(pt=>{{
-      g.append("circle").attr("cx",x(pt.b)).attr("cy",y(pt.f1)).attr("r",r+3).attr("fill","#fff");
-      g.append("circle").attr("cx",x(pt.b)).attr("cy",y(pt.f1)).attr("r",r)
-       .attr("fill",s.color).attr("stroke","#fff").attr("stroke-width",2.5);
-      const labelOffset=s.hi?-20:-16;
-      g.append("text").attr("x",x(pt.b)).attr("y",y(pt.f1)+labelOffset)
-       .attr("text-anchor","middle")
-       .attr("font-size",s.hi?12:10).attr("font-weight","800")
-       .attr("fill",s.color).text(pt.f1.toFixed(2));
+  // Bars — full model color, no opacity
+  g.selectAll(".bar").data(panel.models).join("rect")
+   .attr("x",0).attr("y",m=>y(m.model))
+   .attr("width",m=>x(m.f1)).attr("height",y.bandwidth())
+   .attr("fill",m=>m.color).attr("rx",4);
+
+  // F1 label at bar right — bold, model color
+  g.selectAll(".lbl").data(panel.models).join("text")
+   .attr("x",m=>x(m.f1)+9).attr("y",m=>y(m.model)+y.bandwidth()/2)
+   .attr("dy","0.35em").attr("font-size",13).attr("font-weight","800")
+   .attr("fill",m=>m.color).text(m=>m.f1.toFixed(3));
+
+  // Y axis: model names in model color
+  const yAx=g.append("g").call(d3.axisLeft(y).tickSize(0).tickPadding(10));
+  yAx.select(".domain").remove();
+  yAx.selectAll("text").attr("font-size",13).attr("font-weight","700")
+    .each(function(d){{
+      const row=panel.models.find(m=>m.model===d);
+      d3.select(this).attr("fill",row?row.color:"#111827");
     }});
-  }});
+
+  // X axis
+  const xAx=g.append("g").attr("transform",`translate(0,${{CH}})`)
+    .call(d3.axisBottom(x).ticks(4).tickFormat(d3.format(".2f")));
+  xAx.select(".domain").attr("stroke","#9CA3AF");
+  xAx.selectAll("text").attr("font-size",11).attr("font-weight","700").attr("fill","#111827");
+  xAx.selectAll(".tick line").attr("stroke","#9CA3AF");
+  if(pi===1) g.append("text").attr("class","axl").attr("x",CW/2).attr("y",CH+42)
+    .attr("text-anchor","middle").text("Average F1");
 }});
-
-// Right-edge labels — sorted by complex F1, anti-overlap
-const ends=series.map(s=>({{model:s.model,color:s.color,f1:s.pts[2].f1,hi:s.hi}}))
-  .sort((a,b)=>b.f1-a.f1);
-const placed=[];
-ends.forEach(ep=>{{
-  let ly=y(ep.f1);
-  placed.forEach(py=>{{ if(Math.abs(py-ly)<18) ly=py+(ly>py?18:-18); }});
-  placed.push(ly);
-  g.append("line").attr("x1",W+6).attr("x2",W+16)
-   .attr("y1",y(ep.f1)).attr("y2",ly)
-   .attr("stroke",ep.color).attr("stroke-width",ep.hi?2:1.2);
-  g.append("text").attr("x",W+20).attr("y",ly).attr("dy","0.35em")
-   .attr("font-size",ep.hi?12:11).attr("font-weight",ep.hi?"700":"600")
-   .attr("fill",ep.color).text(ep.model+" "+ep.f1.toFixed(3));
-}});
-
-// X axis — custom labels, large & bold
-buckets.forEach((b,i)=>{{
-  const cx=x(b);
-  g.append("line").attr("x1",cx).attr("x2",cx).attr("y1",H).attr("y2",H+8)
-   .attr("stroke","#374151").attr("stroke-width",1.5);
-  g.append("text").attr("x",cx).attr("y",H+24).attr("text-anchor","middle")
-   .attr("font-size",13).attr("font-weight","700").attr("fill","#111827").text(b);
-  g.append("text").attr("x",cx).attr("y",H+42).attr("text-anchor","middle")
-   .attr("font-size",11).attr("font-weight","600").attr("fill","#1F2937").text(bsub[i]);
-  g.append("text").attr("x",cx).attr("y",H+60).attr("text-anchor","middle")
-   .attr("font-size",10).attr("font-weight","600").attr("fill","#374151").text("n="+ns[i]+" dishes");
-}});
-
-// Y axis label
-g.append("text").attr("transform","rotate(-90)")
-  .attr("x",-H/2).attr("y",-52).attr("text-anchor","middle")
-  .attr("font-size",11).attr("font-weight","600").attr("fill","#374151")
-  .text("Average F1 score");
-
-// Annotation: drop for Kimi
-const kPts=series.find(s=>s.model==="Kimi K2.5").pts;
-const drop=(kPts[0].f1-kPts[2].f1).toFixed(2);
-g.append("text").attr("x",x("Complex")+16).attr("y",y(kPts[2].f1)+32)
-  .attr("font-size",10.5).attr("font-weight","700").attr("font-style","italic")
-  .attr("fill","#1D4ED8").text("Kimi: −"+drop+" from simple→complex");
 """
 
 pathlib.Path("plots/fig05_complexity.html").write_text(page("Fig 5 – F1 by Complexity", js5))
