@@ -96,33 +96,41 @@ print("Saved 01_prediction_accuracy.png")
 
 
 # ── Plot 2: Correct ingredients/dish — 2×3 grid ──────────────────────────────
+# Shared x cap at 99th percentile across ALL models (outlier-robust)
+_all_correct = [d["n_correct"] for name in names for d in data[name]]
+X_CAP = int(np.percentile(_all_correct, 99)) + 2   # e.g. 9 for most runs
+
 NCOLS, NROWS = 3, 2
-fig, axes = plt.subplots(NROWS, NCOLS, figsize=(12, 8), sharey=False)
+fig, axes = plt.subplots(NROWS, NCOLS, figsize=(13, 8), sharey=False)
 axes_flat = axes.flatten()
 
 for idx, (name, color) in enumerate(zip(names, colors)):
     ax = axes_flat[idx]
     vals = [d["n_correct"] for d in data[name]]
-    max_v = max(vals) if vals else 1
-    bins = range(0, max_v + 2)
-    counts, edges = np.histogram(vals, bins=bins)
-    ax.bar(edges[:-1], counts, width=0.8, color=color, edgecolor="white", alpha=0.9)
-    med = float(np.median(vals))
+    # Clip outliers for display — note in title if any are clipped
+    clipped = sum(1 for v in vals if v > X_CAP)
+    vals_clipped = [min(v, X_CAP) for v in vals]
+    bins = range(0, X_CAP + 2)
+    counts, edges = np.histogram(vals_clipped, bins=bins)
+    ax.bar(edges[:-1], counts, width=0.8, color=color, edgecolor="white")
+    med  = float(np.median(vals))
     mean = float(np.mean(vals))
-    ax.axvline(med,  color="black",  linestyle="--", linewidth=1.2, label=f"median {med:.0f}")
-    ax.axvline(mean, color="dimgray", linestyle=":",  linewidth=1.0, label=f"mean {mean:.1f}")
-    ax.set_title(name, fontsize=10, fontweight="bold", pad=6)
-    ax.set_xlabel("Correct ingredients / dish", fontsize=8)
-    ax.set_ylabel("Dishes", fontsize=8)
-    ax.legend(fontsize=7, loc="upper right")
+    ax.axvline(med,  color="#111827", linestyle="--", linewidth=1.8, label=f"median {med:.0f}")
+    ax.axvline(mean, color="#D97706", linestyle=":",  linewidth=1.5, label=f"mean {mean:.1f}")
+    title = name + (f"  [{clipped} outlier>cap]" if clipped else "")
+    ax.set_title(title, fontsize=10, fontweight="bold", color=color, pad=6)
+    ax.set_xlabel("Correct ingredients per dish", fontsize=9)
+    ax.set_ylabel("Number of dishes", fontsize=9)
+    ax.set_xlim(0, X_CAP + 1)
+    ax.legend(fontsize=8, loc="upper right", framealpha=0.85)
     ax.spines[["top", "right"]].set_visible(False)
-    ax.tick_params(labelsize=8)
+    ax.tick_params(labelsize=9)
 
-# Hide unused slots
 for idx in range(len(names), NROWS * NCOLS):
     axes_flat[idx].set_visible(False)
 
-fig.suptitle("Distribution of correctly identified ingredients per dish", fontsize=12, y=1.01)
+fig.suptitle("Distribution of correctly identified ingredients per dish  (shared x-axis, outliers capped)",
+             fontsize=12, fontweight="bold", y=1.01)
 fig.tight_layout()
 fig.savefig(PLOT_DIR / "02_correct_per_dish_dist.png", dpi=150, bbox_inches="tight")
 plt.close()
@@ -196,71 +204,116 @@ plt.close()
 print("Saved 04_hallucinated.png")
 
 
-# ── Plot 5: F1 by GT complexity — line chart ─────────────────────────────────
-buckets = [(1, 3, "1–3\n(simple)"), (4, 8, "4–8\n(moderate)"), (9, 99, "9+\n(complex)")]
+# ── Plot 5: F1 by GT complexity — 3-panel grouped bar chart ─────────────────
+BUCK5 = [(1, 3, "Simple\n(1–3 ingredients)"),
+         (4, 8, "Moderate\n(4–8 ingredients)"),
+         (9, 99, "Complex\n(9+ ingredients)")]
 
-fig, ax = plt.subplots(figsize=(8, 5))
-x = np.arange(len(buckets))
-
-for name, color in zip(names, colors):
+# Compute F1 per model per bucket
+f1_data = {}
+for name in names:
     samples = load(MODELS[name])
-    avgs = []
-    for lo, hi, _ in buckets:
-        group = [s["scores"]["f1"] for s in samples if lo <= len(s["ground_truth"]) <= hi]
-        avgs.append(float(np.mean(group)) if group else float("nan"))
-    ax.plot(x, avgs, marker="o", markersize=7, linewidth=2, label=name, color=color)
-    # Label endpoint
-    if not math.isnan(avgs[-1]):
-        ax.annotate(f"{avgs[-1]:.2f}", xy=(x[-1], avgs[-1]),
-                    xytext=(4, 0), textcoords="offset points",
-                    fontsize=7.5, color=color, va="center")
+    f1_data[name] = []
+    for lo, hi, _ in BUCK5:
+        grp = [s["scores"]["f1"] for s in samples if lo <= len(s["ground_truth"]) <= hi]
+        f1_data[name].append((float(np.mean(grp)) if grp else float("nan"), len(grp)))
 
-ax.set_xticks(x)
-ax.set_xticklabels([b[2] for b in buckets], fontsize=10)
-ax.set_ylabel("Average F1  (PMC13092701 metric)", fontsize=10)
-ax.set_xlabel("Number of GT ingredients in dish", fontsize=10)
-ax.set_title("All models degrade on complex dishes — F1 by dish complexity", fontsize=11, pad=12)
-ax.legend(fontsize=8, loc="upper right", framealpha=0.9)
-ax.set_ylim(0.3, 0.95)
-ax.grid(axis="y", alpha=0.3)
-ax.grid(axis="x", alpha=0.15)
-ax.spines[["top", "right"]].set_visible(False)
+# Sort models by Simple F1 descending for consistent ordering
+sort_idx = sorted(range(len(names)), key=lambda i: f1_data[names[i]][0][0], reverse=True)
+snames = [names[i]  for i in sort_idx]
+scolors = [colors[i] for i in sort_idx]
+
+# Global tight x range (same across all 3 panels)
+all_f1_vals = [v for n in names for v, _ in f1_data[n] if not math.isnan(v)]
+x_lo = max(0.0, min(all_f1_vals) - 0.03)
+x_hi = max(all_f1_vals) + 0.04
+
+fig, axes = plt.subplots(1, 3, figsize=(14, 5))
+y_pos = np.arange(len(snames))
+
+for bi, (ax, (lo, hi, label)) in enumerate(zip(axes, BUCK5)):
+    f1_vals = [f1_data[n][bi][0] for n in snames]
+    n_dishes = f1_data[snames[0]][bi][1]
+
+    bars = ax.barh(y_pos, f1_vals, color=scolors, height=0.65, edgecolor="white", linewidth=0.5)
+
+    # Value labels at bar end, bold, model color
+    for bar, val, col in zip(bars, f1_vals, scolors):
+        if not math.isnan(val):
+            ax.text(val + 0.003, bar.get_y() + bar.get_height() / 2,
+                    f"{val:.3f}", va="center", fontsize=10, fontweight="bold", color=col)
+
+    ax.set_yticks(y_pos)
+    if bi == 0:
+        ax.set_yticklabels(snames, fontsize=10, fontweight="bold")
+        for tick, col in zip(ax.get_yticklabels(), scolors):
+            tick.set_color(col)
+    else:
+        ax.set_yticklabels([])
+    ax.set_xlim(x_lo, x_hi)
+    ax.set_xlabel("Average F1", fontsize=10)
+    ax.set_title(f"{label}\n(n={n_dishes} dishes)", fontsize=11, fontweight="bold", pad=8)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.grid(axis="x", alpha=0.25)
+    ax.tick_params(axis="x", labelsize=9)
+
+fig.suptitle("F1 degrades with dish complexity — same x-scale across all panels", fontsize=12,
+             fontweight="bold", y=1.02)
 fig.tight_layout()
-fig.savefig(PLOT_DIR / "05_f1_by_complexity.png", dpi=150)
+fig.savefig(PLOT_DIR / "05_f1_by_complexity.png", dpi=150, bbox_inches="tight")
 plt.close()
 print("Saved 05_f1_by_complexity.png")
 
 
-# ── Plot 6: Per-dish prediction accuracy — horizontal boxplots ───────────────
-fig, ax = plt.subplots(figsize=(9, 5))
+# ── Plot 6: Prediction accuracy buckets — stacked horizontal bars ─────────────
+#  Matches D3 fig06: Perfect / Good / Fair / Poor per model
+from matplotlib.patches import Patch
 
-# Reverse so highest model is at top
-plot_names  = list(reversed(names))
-plot_colors = list(reversed(colors))
-plot_data   = [[d["pred_acc"] * 100 for d in data[n]] for n in plot_names]
+BUCK6 = [
+    ("Perfect (100%)",  100, 100, "#059669"),
+    ("Good (75–99%)",    75,  99, "#1D4ED8"),
+    ("Fair (50–74%)",    50,  74, "#D97706"),
+    ("Poor (<50%)",       0,  49, "#DC2626"),
+]
 
-bp = ax.boxplot(plot_data, vert=False, patch_artist=True,
-                medianprops=dict(color="black", linewidth=2),
-                whiskerprops=dict(linewidth=1.2),
-                flierprops=dict(marker=".", markersize=3, alpha=0.4))
+model_rows = []
+for name in names:
+    vals = [round(d["pred_acc"] * 100) for d in data[name]]
+    total = len(vals)
+    segs = []
+    for label, lo, hi, col in BUCK6:
+        count = sum(1 for v in vals if lo <= v <= hi)
+        segs.append({"label": label, "pct": 100 * count / total, "color": col})
+    model_rows.append({"name": name, "segs": segs, "perfect": segs[0]["pct"]})
 
-for patch, color in zip(bp["boxes"], plot_colors):
-    patch.set_facecolor(color)
-    patch.set_alpha(0.75)
+# Sort by Perfect descending
+model_rows.sort(key=lambda r: r["perfect"], reverse=True)
 
-# Annotate median values
-for i, vals in enumerate(plot_data, start=1):
-    med = float(np.median(vals))
-    ax.text(med + 0.5, i, f"{med:.0f}%", va="center", fontsize=8, fontweight="bold")
+fig, ax = plt.subplots(figsize=(10, 5))
+y_pos = np.arange(len(model_rows))
 
-ax.set_yticks(range(1, len(plot_names) + 1))
-ax.set_yticklabels(plot_names, fontsize=9)
-ax.set_xlabel("Per-dish prediction accuracy — correct / predicted  (%)", fontsize=10)
-ax.set_title("Prediction accuracy distribution per model\n(box = IQR, line = median, dots = outliers)",
-             fontsize=11, pad=10)
-ax.set_xlim(0, 110)
-ax.grid(axis="x", alpha=0.3)
+for i, row in enumerate(model_rows):
+    left = 0.0
+    for seg in row["segs"]:
+        ax.barh(i, seg["pct"], left=left, color=seg["color"], height=0.65,
+                edgecolor="white", linewidth=0.5)
+        if seg["pct"] >= 5:
+            ax.text(left + seg["pct"] / 2, i, f"{seg['pct']:.0f}%",
+                    ha="center", va="center", fontsize=10, fontweight="bold", color="white")
+        left += seg["pct"]
+
+ax.set_yticks(y_pos)
+ax.set_yticklabels([r["name"] for r in model_rows], fontsize=10, fontweight="bold")
+ax.set_xlabel("Share of dishes (%)", fontsize=10)
+ax.set_xlim(0, 100)
+ax.set_title("Per-dish prediction accuracy — what fraction of dishes did each model nail?",
+             fontsize=11, fontweight="bold", pad=12)
 ax.spines[["top", "right"]].set_visible(False)
+ax.grid(axis="x", alpha=0.2)
+
+legend_els = [Patch(facecolor=col, label=lbl) for lbl, _, _, col in BUCK6]
+ax.legend(handles=legend_els, loc="lower right", fontsize=9, framealpha=0.9)
+
 fig.tight_layout()
 fig.savefig(PLOT_DIR / "06_pred_accuracy_dist.png", dpi=150)
 plt.close()
